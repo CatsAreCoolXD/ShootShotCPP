@@ -1,11 +1,11 @@
 CMakeFiles/ShootShot.dir/imgui/backends/imgui_impl_glfw.cpp.o: \
- /home/dkooistra/Documents/C++/ShootShot/imgui/backends/imgui_impl_glfw.cpp \
+ /home/dkooistra/Documents/ShootShotCPP/imgui/backends/imgui_impl_glfw.cpp \
  /usr/include/stdc-predef.h \
- /home/dkooistra/Documents/C++/ShootShot/imgui/imgui.h \
- /home/dkooistra/Documents/C++/ShootShot/imgui/imconfig.h \
- /usr/lib/gcc/x86_64-redhat-linux/16/include/float.h \
- /usr/lib/gcc/x86_64-redhat-linux/16/include/stdarg.h \
- /usr/lib/gcc/x86_64-redhat-linux/16/include/stddef.h \
+ /home/dkooistra/Documents/ShootShotCPP/imgui/imgui.h \
+ /home/dkooistra/Documents/ShootShotCPP/imgui/imconfig.h \
+ /usr/lib64/gcc/x86_64-suse-linux/16/include/float.h \
+ /usr/lib64/gcc/x86_64-suse-linux/16/include/stdarg.h \
+ /usr/lib64/gcc/x86_64-suse-linux/16/include/stddef.h \
  /usr/include/string.h /usr/include/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
  /usr/include/bits/wordsize.h /usr/include/bits/timesize.h \
@@ -13,16 +13,16 @@ CMakeFiles/ShootShot.dir/imgui/backends/imgui_impl_glfw.cpp.o: \
  /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
  /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
  /usr/include/strings.h /usr/include/assert.h \
- /home/dkooistra/Documents/C++/ShootShot/imgui/backends/imgui_impl_glfw.h \
- /home/dkooistra/Documents/C++/CGGL/install/include/GLFW/glfw3.h \
- /usr/lib/gcc/x86_64-redhat-linux/16/include/stdint.h \
+ /home/dkooistra/Documents/ShootShotCPP/imgui/backends/imgui_impl_glfw.h \
+ /home/dkooistra/Documents/CGGL/install/include/GLFW/glfw3.h \
+ /usr/lib64/gcc/x86_64-suse-linux/16/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/types.h \
  /usr/include/bits/typesizes.h /usr/include/bits/time64.h \
  /usr/include/bits/wchar.h /usr/include/bits/stdint-intn.h \
  /usr/include/bits/stdint-uintn.h /usr/include/bits/stdint-least.h \
  /usr/include/GL/gl.h /usr/include/GL/glext.h \
- /home/dkooistra/Documents/C++/CGGL/install/include/KHR/khrplatform.h \
- /home/dkooistra/Documents/C++/CGGL/install/include/GLFW/glfw3native.h \
+ /home/dkooistra/Documents/CGGL/install/include/KHR/khrplatform.h \
+ /home/dkooistra/Documents/CGGL/install/include/GLFW/glfw3native.h \
  /usr/include/X11/Xlib.h /usr/include/sys/types.h \
  /usr/include/bits/types/clock_t.h /usr/include/bits/types/clockid_t.h \
  /usr/include/bits/types/time_t.h /usr/include/bits/types/timer_t.h \
@@ -40,14 +40,14 @@ CMakeFiles/ShootShot.dir/imgui/backends/imgui_impl_glfw.cpp.o: \
  /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h \
  /usr/include/X11/extensions/Xrandr.h /usr/include/X11/extensions/randr.h \
  /usr/include/X11/extensions/Xrender.h /usr/include/X11/Xutil.h \
- /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h \
- /usr/include/X11/extensions/render.h /usr/include/X11/Xdefs.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/environments.h /usr/include/bits/confname.h \
- /usr/include/bits/getopt_posix.h /usr/include/bits/getopt_core.h \
- /usr/include/bits/unistd_ext.h /usr/include/linux/close_range.h \
- /usr/include/stdio.h /usr/include/bits/types/__fpos_t.h \
- /usr/include/bits/types/__mbstate_t.h \
+ /usr/include/X11/Xresource.h /usr/include/X11/keysym.h \
+ /usr/include/X11/keysymdef.h /usr/include/X11/extensions/render.h \
+ /usr/include/X11/Xdefs.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/bits/getopt_posix.h \
+ /usr/include/bits/getopt_core.h /usr/include/bits/unistd_ext.h \
+ /usr/include/linux/close_range.h /usr/include/stdio.h \
+ /usr/include/bits/types/__fpos_t.h /usr/include/bits/types/__mbstate_t.h \
  /usr/include/bits/types/__fpos64_t.h /usr/include/bits/types/__FILE.h \
  /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
  /usr/include/bits/types/cookie_io_functions_t.h \

@@ -1,11 +1,11 @@
 CMakeFiles/ShootShot.dir/imgui/misc/cpp/imgui_stdlib.cpp.o: \
- /home/dkooistra/Documents/C++/ShootShot/imgui/misc/cpp/imgui_stdlib.cpp \
+ /home/dkooistra/Documents/ShootShotCPP/imgui/misc/cpp/imgui_stdlib.cpp \
  /usr/include/stdc-predef.h \
- /home/dkooistra/Documents/C++/ShootShot/imgui/imgui.h \
- /home/dkooistra/Documents/C++/ShootShot/imgui/imconfig.h \
- /usr/lib/gcc/x86_64-redhat-linux/16/include/float.h \
- /usr/lib/gcc/x86_64-redhat-linux/16/include/stdarg.h \
- /usr/lib/gcc/x86_64-redhat-linux/16/include/stddef.h \
+ /home/dkooistra/Documents/ShootShotCPP/imgui/imgui.h \
+ /home/dkooistra/Documents/ShootShotCPP/imgui/imconfig.h \
+ /usr/lib64/gcc/x86_64-suse-linux/16/include/float.h \
+ /usr/lib64/gcc/x86_64-suse-linux/16/include/stdarg.h \
+ /usr/lib64/gcc/x86_64-suse-linux/16/include/stddef.h \
  /usr/include/string.h /usr/include/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
  /usr/include/bits/wordsize.h /usr/include/bits/timesize.h \
@@ -13,11 +13,11 @@ CMakeFiles/ShootShot.dir/imgui/misc/cpp/imgui_stdlib.cpp.o: \
  /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
  /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
  /usr/include/strings.h /usr/include/assert.h \
- /home/dkooistra/Documents/C++/ShootShot/imgui/misc/cpp/imgui_stdlib.h \
+ /home/dkooistra/Documents/ShootShotCPP/imgui/misc/cpp/imgui_stdlib.h \
  /usr/include/c++/16/string /usr/include/c++/16/bits/requires_hosted.h \
- /usr/include/c++/16/x86_64-redhat-linux/bits/c++config.h \
- /usr/include/c++/16/x86_64-redhat-linux/bits/os_defines.h \
- /usr/include/c++/16/x86_64-redhat-linux/bits/cpu_defines.h \
+ /usr/include/c++/16/x86_64-suse-linux/bits/c++config.h \
+ /usr/include/c++/16/x86_64-suse-linux/bits/os_defines.h \
+ /usr/include/c++/16/x86_64-suse-linux/bits/cpu_defines.h \
  /usr/include/c++/16/pstl/pstl_config.h \
  /usr/include/c++/16/bits/stringfwd.h \
  /usr/include/c++/16/bits/memoryfwd.h /usr/include/c++/16/bits/version.h \
@@ -42,12 +42,12 @@ CMakeFiles/ShootShot.dir/imgui/misc/cpp/imgui_stdlib.cpp.o: \
  /usr/include/c++/16/bits/concept_check.h \
  /usr/include/c++/16/debug/assertions.h \
  /usr/include/c++/16/bits/allocator.h \
- /usr/include/c++/16/x86_64-redhat-linux/bits/c++allocator.h \
+ /usr/include/c++/16/x86_64-suse-linux/bits/c++allocator.h \
  /usr/include/c++/16/bits/new_allocator.h \
  /usr/include/c++/16/bits/new_throw.h \
  /usr/include/c++/16/bits/cpp_type_traits.h \
  /usr/include/c++/16/bits/localefwd.h \
- /usr/include/c++/16/x86_64-redhat-linux/bits/c++locale.h \
+ /usr/include/c++/16/x86_64-suse-linux/bits/c++locale.h \
  /usr/include/c++/16/clocale /usr/include/locale.h \
  /usr/include/bits/locale.h /usr/include/c++/16/iosfwd \
  /usr/include/c++/16/cctype /usr/include/ctype.h \
