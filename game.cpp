@@ -7,9 +7,10 @@ Player::Player(cg::Vec2f pos, float size) : pos(pos), size(size) {
     sprite.FlipVertically();
 
     shotgunTex.LoadImage("tex/shotgun.png");
+    shotgunTex.FlipVertically();
     cg::Vec2f ogSize = shotgunTex.GetSize();
-    float scale = std::max(ogSize.x, ogSize.y) / (size * 0.25f);
-    shotgunTex.Scale(scale);
+    float scale = std::max(ogSize.x, ogSize.y) / (size * 0.75f);
+    shotgunTex.Scale(1.f /  scale);
 }
 
 void Player::Draw(){
@@ -20,7 +21,36 @@ void Player::Draw(){
     cg::Draw(sprite, sprite.GetOrigin() + cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite.GetSize(), FLAG_NO_BORDER);
     cg::Draw(sprite, sprite.GetOrigin() - cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite.GetSize(), FLAG_NO_BORDER);
 
-    // Todo: Draw rotated shotgun
+    // Draw shotgun rotated towards the mouse
+    cg::Vec2f shotgunSize = shotgunTex.GetSize();
+    cg::Vec2f origin = pos + cg::Vec2f(size,-size) / 3.f;
+    shotgunTex.SetOrigin(origin);
+    
+    cg::Vec2f mousePos = cg::GetMousePos();
+    cg::Vec2f delta = mousePos - origin;
+
+    // This code is copied from cg::Line()
+    cg::Vec2f dir = delta.Normalized();
+    cg::Vec2f right = dir.Right() * shotgunSize.y;
+
+    cg::Color color(255,255,255);
+    cg::Vec2f a = origin, b = origin + dir * shotgunSize.y;
+    cg::Vertex tri1[3] = {
+        cg::Vertex(a + right, color, cg::Vec2f(0,0)),
+        cg::Vertex(a - right, color, cg::Vec2f(0,1)),
+        cg::Vertex(b + right, color, cg::Vec2f(1,0))
+    };
+
+    cg::Vertex tri2[3] = {
+        cg::Vertex(b + right, color, cg::Vec2f(1,0)),
+        cg::Vertex(b - right, color, cg::Vec2f(1,1)),
+        cg::Vertex(a - right, color, cg::Vec2f(0,1))
+    };
+
+    cg::UseTexture(shotgunTex);
+    cg::Triangle(tri1, false);
+    cg::Triangle(tri2, false);
+    cg::StopUsingTexture();
 }
 
 void Player::DeleteTextures()
@@ -32,18 +62,18 @@ void Player::DeleteTextures()
 void Player::Update(){
     velocity = velocity + cg::Vec2f(0.f, -30.f) * cg::GetDeltaTime();
 
+    constexpr float maxBoost = 500.f;
     if (scene == Game && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
         cg::Vec2f delta = pos - cg::Vec2f(cg::GetMousePos());
-        float intensity = delta.Length();
+        float intensity = std::min(delta.Length(), maxBoost);
 
-        velocity = delta * 3.f * cg::GetDeltaTime();
+        velocity = delta.Normalized() * intensity * 2.5f * cg::GetDeltaTime();
     }
 
     // Clamp speed
-    constexpr float maxSpeed = 20.f;
-    if (velocity.Length() > maxSpeed){
+    constexpr float maxSpeed = 500.f;
+    if (velocity.Length() > maxSpeed)
         velocity = velocity.Normalized() * maxSpeed;
-    }
 
     pos = pos + velocity;
 
@@ -75,7 +105,8 @@ int Randint(int min, int max){
 
 void GenerateCoin()
 {
-    AddCoin(cg::Vec2f(Randint(0, cg::GetWindowWidth()), Randint(0, cg::GetWindowHeight())));
+    const static cg::Vec2f margin(cg::GetWindowWidth() * 0.02f, cg::GetWindowHeight() * 0.05f);
+    AddCoin(cg::Vec2f(Randint(margin.x, cg::GetWindowWidth() - margin.x), Randint(margin.y, cg::GetWindowHeight() - margin.y)));
 }
 
 void UpdateCoins(const Player &player)
@@ -90,10 +121,20 @@ void UpdateCoins(const Player &player)
         }
     }
 
-    for (int i = collectedCoins.size() - 1; i >= 0; i--){
+    std::sort(collectedCoins.begin(), collectedCoins.end(), [](int a, int b){
+        return a > b;
+    });
+
+    for (int i : collectedCoins){
         std::cout << "Collected coin at index " << i << std::endl;
         coins.erase(coins.begin() + i);
         GenerateCoin();
+
+        // The more coins collected, the less score coins give
+        score += 10 * exp(-coinsCollected / 100.f);
+        coinsCollected++;
+
+        NewBackgroundColor();
     }
 }
 

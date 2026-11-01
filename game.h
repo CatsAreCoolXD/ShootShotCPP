@@ -35,6 +35,8 @@ class Coin {
         cg::Vec2f pos;
 };
 
+inline int score = 0;
+inline int coinsCollected = 0;
 inline std::vector<Coin> coins;
 
 inline void AddCoin(cg::Vec2f pos) {
@@ -44,6 +46,25 @@ inline void AddCoin(cg::Vec2f pos) {
 inline void GameOver() {
     std::cout << "Game Over!\n";
     scene = GameScene::DeathScreen;
+}
+
+inline cg::Color backgroundTint;
+inline const std::vector<cg::Color> backgroundColors = {
+    cg::Color(255, 0, 0),
+    cg::Color(0, 0, 255),
+    cg::Color(255, 255, 0),
+    cg::Color(255, 0, 255),
+    cg::Color(0, 255, 255),
+    cg::Color(255, 125, 0),
+    cg::Color(125, 255, 0),
+    cg::Color(0, 255, 125),
+    cg::Color(0, 125, 255),
+    cg::Color(125, 0, 255),
+    cg::Color(255, 0, 125)
+};
+
+inline void NewBackgroundColor(){
+    backgroundTint = backgroundColors[rand() % backgroundColors.size()];
 }
 
 void GenerateCoin();
