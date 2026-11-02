@@ -9,6 +9,7 @@ int main(){
         settings.antiAliasing = true;
         settings.windowMode = WINDOW_MODE_WINDOWED_BORDERLESS;
         cg::Initialize("Clip Manager", cg::Vec2i(1920, 1080), settings);
+        cg::SetFPSLimit(1000);
         cg::SetConfig(CGGL_CONFIG_VSYNC, true);
         cg::SetConfig(CGGL_CONFIG_QUIT_ON_KEY_ESCAPE, true);
 
@@ -74,6 +75,9 @@ int main(){
             if (scene == DeathScreen){
                 
             }
+
+            std::string fpsText = (std::string)"FPS: " + std::to_string(cg::GetAverageFPS());
+            cg::Text(fpsText, cg::Vec2f(10, cg::GetWindowHeight() - cg::MeasureText(fpsText).y - 10));
 
             cg::Draw();
         }

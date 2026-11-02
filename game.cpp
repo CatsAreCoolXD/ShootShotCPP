@@ -60,22 +60,25 @@ void Player::DeleteTextures()
 }
 
 void Player::Update(){
-    velocity = velocity + cg::Vec2f(0.f, -30.f) * cg::GetDeltaTime();
+    constexpr float mass = 1.f;
+    const cg::Vec2f force = cg::Vec2f(0.f, -1500.f);
+    accel = force / mass; // F = m * a
+
+    pos = pos + velocity * cg::GetDeltaTime() + accel * 0.5f * cg::GetDeltaTime() * cg::GetDeltaTime();
+    velocity = velocity + accel * cg::GetDeltaTime();
 
     constexpr float maxBoost = 500.f;
     if (scene == Game && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
         cg::Vec2f delta = pos - cg::Vec2f(cg::GetMousePos());
         float intensity = std::min(delta.Length(), maxBoost);
 
-        velocity = delta.Normalized() * intensity * 2.5f * cg::GetDeltaTime();
+        velocity = delta.Normalized() * intensity * 2.5f;
     }
 
     // Clamp speed
-    constexpr float maxSpeed = 500.f;
-    if (velocity.Length() > maxSpeed)
-        velocity = velocity.Normalized() * maxSpeed;
-
-    pos = pos + velocity;
+    // constexpr float maxSpeed = 500.f;
+    // if (velocity.Length() > maxSpeed)
+    //     velocity = velocity.Normalized() * maxSpeed;
 
     if (pos.x < 0)
         pos.x += cg::GetWindowWidth();

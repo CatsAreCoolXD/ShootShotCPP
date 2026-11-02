@@ -23,7 +23,7 @@ class Player {
 
         void DeleteTextures();
 
-        cg::Vec2f pos, velocity = cg::Vec2f(0,0);
+        cg::Vec2f pos, velocity = cg::Vec2f(0,0), accel = cg::Vec2f(0,0);
         float size;
     private:
         cg::Texture sprite, shotgunTex;
