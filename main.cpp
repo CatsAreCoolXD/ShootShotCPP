@@ -1,13 +1,14 @@
 #include <iostream>
 
 #include "game.h"
+#include "audio.h"
 
 int main(){
     {
         cg::WindowSettings settings;
         settings.resizable = false;
         settings.antiAliasing = true;
-        settings.windowMode = WINDOW_MODE_WINDOWED_BORDERLESS;
+        settings.windowMode = WINDOW_MODE_FULLSCREEN;
         cg::Initialize("Clip Manager", cg::Vec2i(1920, 1080), settings);
         cg::SetFPSLimit(1000);
         cg::SetConfig(CGGL_CONFIG_VSYNC, true);
@@ -37,11 +38,31 @@ int main(){
 
         std::string menuText = "ShootShot!";
 
+        Audio::Init();
+
+        int musicIndex = 0;
+        Audio::Sound* music[2] = {
+            music2Sfx,
+            musicSfx
+        };
+
+        Audio::Play(music2Sfx);
+
         while (cg::WindowIsOpen()){
             cg::NewFrame();
 
+            if (!Audio::IsPlaying(music[musicIndex])){
+                std::cout << "Music number " << musicIndex << " is finished. Playing next song.\n";
+                musicIndex = (++musicIndex) % 2;
+                Audio::Play(music[musicIndex]);
+            }
+
             background.SetTint(backgroundTint);
             cg::Draw(background);
+
+            if (scene != Game && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
+                Audio::Play(clickSfx, 10.f);
+            }
 
             if (scene == Game || scene == Transition){
                 cg::PushFont(scoreFont);
@@ -64,6 +85,7 @@ int main(){
                     cg::Vec2f(cg::GetWindowWidth() / 2.f, cg::GetWindowHeight() * 0.75) - cg::MeasureText(menuText) / 2.f,
                     FLAG_USE_SECONDARY_COLOR
                 );
+
                 cg::PopFont();
                 cg::Vec2f size(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() / 10.f);
                 if (cg::GUIButton("Start", cg::Vec2f(cg::GetWindowSize() / 2.f) - size / 2.f, size)) {
@@ -76,7 +98,7 @@ int main(){
                 
             }
 
-            std::string fpsText = (std::string)"FPS: " + std::to_string(cg::GetAverageFPS());
+            std::string fpsText = (std::string)"FPS: " + std::to_string(int(cg::GetAverageFPS()));
             cg::Text(fpsText, cg::Vec2f(10, cg::GetWindowHeight() - cg::MeasureText(fpsText).y - 10));
 
             cg::Draw();
@@ -87,6 +109,8 @@ int main(){
         player.DeleteTextures();
     }
 
+    // Exit
+    Audio::Shutdown();
     cg::Terminate();
 
     return 0;

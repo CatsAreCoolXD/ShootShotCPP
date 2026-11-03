@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include "audio.h"
+
 Player::Player(cg::Vec2f pos, float size) : pos(pos), size(size) {
     sprite.LoadImage("tex/player.png");
     sprite.SetSize(cg::Vec2f(size,size));
@@ -73,6 +75,8 @@ void Player::Update(){
         float intensity = std::min(delta.Length(), maxBoost);
 
         velocity = delta.Normalized() * intensity * 2.5f;
+
+        Audio::Play(explosionSfx);
     }
 
     // Clamp speed
@@ -91,6 +95,7 @@ void Player::Update(){
 
     if (pos.y < 0) {
         GameOver();
+        Audio::Play(failSfx);
         velocity = cg::Vec2f(0,0);
     }
 
@@ -123,6 +128,10 @@ void UpdateCoins(const Player &player)
             collectedCoins.push_back(i);
         }
     }
+
+    if (collectedCoins.empty()) return;
+
+    Audio::Play(coinSfx);
 
     std::sort(collectedCoins.begin(), collectedCoins.end(), [](int a, int b){
         return a > b;

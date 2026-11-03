@@ -4,7 +4,7 @@ project(ShootShot)
 include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_PREFIX_PATH /home/dkooistra/Documents/C++/CGGL/install)
+set(CMAKE_PREFIX_PATH /home/dkooistra/Documents/CGGL/install)
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
@@ -16,6 +16,9 @@ add_executable(ShootShot
 
         game.h
         game.cpp
+
+        audio.h
+        audio.cpp
         
         # ImGui
         imgui/imgui.cpp
