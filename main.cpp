@@ -8,7 +8,7 @@ int main(){
         cg::WindowSettings settings;
         settings.resizable = false;
         settings.antiAliasing = true;
-        settings.windowMode = WINDOW_MODE_FULLSCREEN;
+        settings.windowMode = WINDOW_MODE_WINDOWED_BORDERLESS;
         cg::Initialize("Clip Manager", cg::Vec2i(1920, 1080), settings);
         cg::SetFPSLimit(1000);
         cg::SetConfig(CGGL_CONFIG_VSYNC, true);
@@ -38,30 +38,30 @@ int main(){
 
         std::string menuText = "ShootShot!";
 
-        Audio::Init();
-
         int musicIndex = 0;
-        Audio::Sound* music[2] = {
+        cg::Sound* music[2] = {
             music2Sfx,
             musicSfx
         };
 
-        Audio::Play(music2Sfx);
+        cg::Play(music2Sfx);
+
+        //cg::ToggleMute();
 
         while (cg::WindowIsOpen()){
             cg::NewFrame();
 
-            if (!Audio::IsPlaying(music[musicIndex])){
+            if (!cg::IsPlaying(music[musicIndex])){
                 std::cout << "Music number " << musicIndex << " is finished. Playing next song.\n";
                 musicIndex = (++musicIndex) % 2;
-                Audio::Play(music[musicIndex]);
+                cg::Play(music[musicIndex]);
             }
 
             background.SetTint(backgroundTint);
             cg::Draw(background);
 
             if (scene != Game && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
-                Audio::Play(clickSfx, 10.f);
+                cg::Play(clickSfx, 10.f);
             }
 
             if (scene == Game || scene == Transition){
@@ -110,7 +110,6 @@ int main(){
     }
 
     // Exit
-    Audio::Shutdown();
     cg::Terminate();
 
     return 0;

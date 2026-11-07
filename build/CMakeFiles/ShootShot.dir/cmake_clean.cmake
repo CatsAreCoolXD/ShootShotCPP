@@ -1,7 +1,5 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ShootShot.dir/link.d"
-  "CMakeFiles/ShootShot.dir/audio.cpp.o"
-  "CMakeFiles/ShootShot.dir/audio.cpp.o.d"
   "CMakeFiles/ShootShot.dir/game.cpp.o"
   "CMakeFiles/ShootShot.dir/game.cpp.o.d"
   "CMakeFiles/ShootShot.dir/imgui/backends/imgui_impl_glfw.cpp.o"

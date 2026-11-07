@@ -1,6 +1,7 @@
 #include "game.h"
 
 #include "audio.h"
+#include <format>
 
 Player::Player(cg::Vec2f pos, float size) : pos(pos), size(size) {
     sprite.LoadImage("tex/player.png");
@@ -70,13 +71,13 @@ void Player::Update(){
     velocity = velocity + accel * cg::GetDeltaTime();
 
     constexpr float maxBoost = 500.f;
-    if (scene == Game && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
+    if (scene == Game && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT) && pos.y < cg::GetWindowHeight()){
         cg::Vec2f delta = pos - cg::Vec2f(cg::GetMousePos());
         float intensity = std::min(delta.Length(), maxBoost);
 
         velocity = delta.Normalized() * intensity * 2.5f;
 
-        Audio::Play(explosionSfx);
+        cg::Play(explosionSfx);
     }
 
     // Clamp speed
@@ -88,14 +89,14 @@ void Player::Update(){
         pos.x += cg::GetWindowWidth();
 
     if (pos.x > cg::GetWindowWidth())
-        pos.x = 0;
+        pos.x -= cg::GetWindowWidth();
 
-    if (pos.y > cg::GetWindowHeight() && std::abs(velocity.y) > 5.f)
+    if (pos.y > cg::GetWindowHeight() && std::abs(velocity.y) > 500.f)
         pos.y = 0;
 
     if (pos.y < 0) {
         GameOver();
-        Audio::Play(failSfx);
+        cg::Play(failSfx);
         velocity = cg::Vec2f(0,0);
     }
 
@@ -131,7 +132,7 @@ void UpdateCoins(const Player &player)
 
     if (collectedCoins.empty()) return;
 
-    Audio::Play(coinSfx);
+    cg::Play(coinSfx);
 
     std::sort(collectedCoins.begin(), collectedCoins.end(), [](int a, int b){
         return a > b;
@@ -163,8 +164,13 @@ void DrawCoins(){
         loadedCoinTextures = true;
     }
 
+    static cg::Clock clock;
+    if (!clock.IsTicking()) clock.Start();
+
+    double elapsed = clock.TimeElapsed<cg::Seconds>();
+
     // A full coin rotation takes a second with this setup
-    int phase = int(cg::GetFrameCount() / (cg::GetAverageFPS() / 6)) % 6;
+    int phase = int(elapsed * 6) % 6;
     cg::Texture* coinTex = coinTextures[phase];
     for (Coin& coin : coins){
         coinTex->SetOrigin(coin.pos);
