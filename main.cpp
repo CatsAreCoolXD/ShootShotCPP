@@ -79,7 +79,7 @@ int main(){
             DrawCoins();
             player.Draw();
 
-            if (scene != Game && scene != Transition){
+            if (scene == MainMenu){
                 cg::PushFont(bigFont);
                 cg::Text(menuText, 
                     cg::Vec2f(cg::GetWindowWidth() / 2.f, cg::GetWindowHeight() * 0.75) - cg::MeasureText(menuText) / 2.f,
@@ -88,14 +88,27 @@ int main(){
 
                 cg::PopFont();
                 cg::Vec2f size(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() / 10.f);
-                if (cg::GUIButton("Start", cg::Vec2f(cg::GetWindowSize() / 2.f) - size / 2.f, size)) {
+                cg::Vec2f buttonPos = cg::Vec2f(cg::GetWindowSize() / 2.f) - size / 2.f;
+                const float spacing = cg::GetWindowHeight() * 0.05f;
+                if (cg::GUIButton("Start", buttonPos, size)) {
                     scene = Transition;
                     player.pos = cg::Vec2f(cg::GetWindowSize() / 2.f); 
                 }
+                buttonPos.y -= size.y + spacing;
+
+                if (cg::GUIButton("Characters", buttonPos, size)){
+                    scene = CharacterStore;
+                }
             }
 
+            // Todo: Make a death screen with stuff like revive, unlock a new character etc
             if (scene == DeathScreen){
-                
+                scene = MainMenu;
+            }
+
+            if (scene == CharacterStore){
+                static StoreItem item(player.GetTexture(), 5, "Cool Dude");
+                item.Draw(0, 0);
             }
 
             std::string fpsText = (std::string)"FPS: " + std::to_string(int(cg::GetAverageFPS()));

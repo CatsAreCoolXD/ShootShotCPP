@@ -112,6 +112,14 @@ int Randint(int min, int max){
     return min + rand() % (max - min);
 }
 
+void GameOver()
+{
+    score = 0;
+    cg::Play(failSfx);
+    scene = GameScene::DeathScreen;
+    std::cout << "Game Over!\n";
+}
+
 void GenerateCoin()
 {
     const static cg::Vec2f margin(cg::GetWindowWidth() * 0.02f, cg::GetWindowHeight() * 0.05f);
@@ -144,7 +152,8 @@ void UpdateCoins(const Player &player)
         GenerateCoin();
 
         // The more coins collected, the less score coins give
-        score += 10 * exp(-coinsCollected / 100.f);
+        constexpr float coinValue = 10.f, coinDegration = 100.f;
+        score += coinValue * exp(-coinsCollected / coinDegration);
         coinsCollected++;
 
         NewBackgroundColor();
@@ -176,5 +185,38 @@ void DrawCoins(){
         coinTex->SetOrigin(coin.pos);
         coinTex->SetSize(COIN_SIZE);
         cg::Draw(*coinTex);
+    }
+}
+
+void StoreItem::Draw(float offset, int index)
+{
+    cg::Vec2f center = cg::Vec2f(cg::GetWindowSize() / 2.f) - cg::Vec2f(offset, 0.f);
+    cg::Vec2f containerSize = cg::Vec2f(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() / 2.f);
+
+    const float spacing = cg::GetWindowWidth() * 0.05f;
+    center.x += containerSize.x * index + spacing;
+
+    cg::RoundedRectangle(center, containerSize, 15, FLAG_CENTERED);
+
+    const float padding = spacing / 4.f;
+    const float texSize = containerSize.x - padding * 2.f;
+
+    const float containerTop = center.y + containerSize.y / 2.f;
+    const float texCenterY   = containerTop - padding - texSize / 2.f;
+
+    cg::RoundedRectangle(
+        cg::Vec2f(center.x, texCenterY),
+        cg::Vec2f(texSize, texSize),
+        10, FLAG_CENTERED
+    );
+
+    cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - cg::Vec2f(texSize, texSize) / 2.f, cg::Vec2f(texSize, texSize), FLAG_CENTERED);
+
+    cg::Vec2f titleTextPos = cg::Vec2f(center.x, cg::GetWindowHeight() - texCenterY - padding * 2);
+    cg::Text(name, titleTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
+
+    cg::Vec2f buyButtonPos = titleTextPos - cg::Vec2f(0, spacing * 2);
+    if (cg::GUIButton(std::format("Buy for ${}", price), buyButtonPos, cg::Vec2f(texSize, spacing), FLAG_CENTERED)){
+        std::cout << "Bought " << name << ".\n";
     }
 }

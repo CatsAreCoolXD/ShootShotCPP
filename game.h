@@ -10,7 +10,8 @@ enum GameScene {
     MainMenu,
     Game,
     DeathScreen,
-    Transition
+    Transition,
+    CharacterStore
 };
 
 inline GameScene scene = GameScene::MainMenu;
@@ -20,6 +21,8 @@ class Player {
         Player(cg::Vec2f pos, float size);
         void Update();
         void Draw();
+
+        cg::Texture* GetTexture() { return &sprite; }
 
         void DeleteTextures();
 
@@ -43,10 +46,7 @@ inline void AddCoin(cg::Vec2f pos) {
     coins.emplace_back(pos);
 }
 
-inline void GameOver() {
-    std::cout << "Game Over!\n";
-    scene = GameScene::DeathScreen;
-}
+void GameOver();
 
 inline cg::Color backgroundTint;
 inline const std::vector<cg::Color> backgroundColors = {
@@ -71,5 +71,17 @@ void GenerateCoin();
 
 void UpdateCoins(const Player& player);
 void DrawCoins();
+
+class StoreItem {
+    public:
+        StoreItem(cg::Texture* tex, float price, std::string name) : tex(tex), price(price), name(name) {}
+
+        void Draw(float offset, int index);
+
+        float price;
+        std::string name;
+    private:
+        cg::Texture* tex;
+};
 
 #endif

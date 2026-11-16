@@ -10,7 +10,7 @@
         "${workspaceFolder}/**",
         "/usr/include",
         "/usr/include/x86_64-linux-gnu",
-        "/home/dkooistra/Documents/C++/CGGL/**"
+        "/home/dkooistra/Documents/CGGL/**"
       ]
     }
   ]
