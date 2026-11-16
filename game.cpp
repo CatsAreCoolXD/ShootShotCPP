@@ -215,7 +215,7 @@ void StoreItem::Draw(float offset, int index)
     cg::Vec2f titleTextPos = cg::Vec2f(center.x, cg::GetWindowHeight() - texCenterY - padding * 2);
     cg::Text(name, titleTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
 
-    cg::Vec2f buyButtonPos = titleTextPos - cg::Vec2f(0, spacing * 2);
+    cg::Vec2f buyButtonPos = titleTextPos - cg::Vec2f(0, spacing * 0.85f);
     if (cg::GUIButton(std::format("Buy for ${}", price), buyButtonPos, cg::Vec2f(texSize, spacing), FLAG_CENTERED)){
         std::cout << "Bought " << name << ".\n";
     }

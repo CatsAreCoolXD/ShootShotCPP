@@ -46,7 +46,7 @@ int main(){
 
         cg::Play(music2Sfx);
 
-        //cg::ToggleMute();
+        cg::ToggleMute();
 
         while (cg::WindowIsOpen()){
             cg::NewFrame();

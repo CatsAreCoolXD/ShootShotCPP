@@ -1,11 +1,11 @@
 CMakeFiles/ShootShot.dir/imgui/backends/imgui_impl_glfw.cpp.o: \
- /home/dkooistra/Documents/ShootShotCPP/imgui/backends/imgui_impl_glfw.cpp \
+ /home/dkooistra/Documenten/C++/ShootShot/imgui/backends/imgui_impl_glfw.cpp \
  /usr/include/stdc-predef.h \
- /home/dkooistra/Documents/ShootShotCPP/imgui/imgui.h \
- /home/dkooistra/Documents/ShootShotCPP/imgui/imconfig.h \
- /usr/lib64/gcc/x86_64-suse-linux/16/include/float.h \
- /usr/lib64/gcc/x86_64-suse-linux/16/include/stdarg.h \
- /usr/lib64/gcc/x86_64-suse-linux/16/include/stddef.h \
+ /home/dkooistra/Documenten/C++/ShootShot/imgui/imgui.h \
+ /home/dkooistra/Documenten/C++/ShootShot/imgui/imconfig.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/16/include/float.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/16/include/stdarg.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/16/include/stddef.h \
  /usr/include/string.h /usr/include/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
  /usr/include/bits/wordsize.h /usr/include/bits/timesize.h \
@@ -13,16 +13,16 @@ CMakeFiles/ShootShot.dir/imgui/backends/imgui_impl_glfw.cpp.o: \
  /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
  /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
  /usr/include/strings.h /usr/include/assert.h \
- /home/dkooistra/Documents/ShootShotCPP/imgui/backends/imgui_impl_glfw.h \
- /home/dkooistra/Documents/CGGL/install/include/GLFW/glfw3.h \
- /usr/lib64/gcc/x86_64-suse-linux/16/include/stdint.h \
+ /home/dkooistra/Documenten/C++/ShootShot/imgui/backends/imgui_impl_glfw.h \
+ /home/dkooistra/Documenten/C++/CGGL/install/include/GLFW/glfw3.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/16/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/types.h \
  /usr/include/bits/typesizes.h /usr/include/bits/time64.h \
  /usr/include/bits/wchar.h /usr/include/bits/stdint-intn.h \
  /usr/include/bits/stdint-uintn.h /usr/include/bits/stdint-least.h \
  /usr/include/GL/gl.h /usr/include/GL/glext.h \
- /home/dkooistra/Documents/CGGL/install/include/KHR/khrplatform.h \
- /home/dkooistra/Documents/CGGL/install/include/GLFW/glfw3native.h \
+ /home/dkooistra/Documenten/C++/CGGL/install/include/KHR/khrplatform.h \
+ /home/dkooistra/Documenten/C++/CGGL/install/include/GLFW/glfw3native.h \
  /usr/include/X11/Xlib.h /usr/include/sys/types.h \
  /usr/include/bits/types/clock_t.h /usr/include/bits/types/clockid_t.h \
  /usr/include/bits/types/time_t.h /usr/include/bits/types/timer_t.h \
