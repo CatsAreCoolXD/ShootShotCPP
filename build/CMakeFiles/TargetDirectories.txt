@@ -1,3 +1,0 @@
-/home/dkooistra/Documenten/C++/ShootShot/build/CMakeFiles/ShootShot.dir
-/home/dkooistra/Documenten/C++/ShootShot/build/CMakeFiles/edit_cache.dir
-/home/dkooistra/Documenten/C++/ShootShot/build/CMakeFiles/rebuild_cache.dir
