@@ -2,6 +2,7 @@
 
 #include "game.h"
 #include "audio.h"
+#include "gui.h"
 
 int main(){
     {
@@ -25,6 +26,7 @@ int main(){
         cg::PushFont(font);
 
         Player player(cg::GetWindowSize() / 2.f, 100);
+        LoadCharacterTextures(player, 100);
 
         cg::Texture background("tex/background.png");
         background.SetOrigin(cg::Vec2f(0,0));
@@ -46,7 +48,7 @@ int main(){
 
         cg::Play(music2Sfx);
 
-        cg::ToggleMute();
+        //cg::ToggleMute();
 
         while (cg::WindowIsOpen()){
             cg::NewFrame();
@@ -64,7 +66,7 @@ int main(){
                 cg::Play(clickSfx, 10.f);
             }
 
-            if (scene == Game || scene == Transition){
+            if (scene == Game){
                 cg::PushFont(scoreFont);
                 std::string scoreText = std::to_string(score);
                 cg::PushPrimaryColor(cg::Color(128,128,128,128));
@@ -79,6 +81,11 @@ int main(){
             DrawCoins();
             player.Draw();
 
+            if (scene == CharacterStore){
+                static float money = 100; // Todo
+                DrawCharacterStore(money, player);
+            }
+
             if (scene == MainMenu){
                 cg::PushFont(bigFont);
                 cg::Text(menuText, 
@@ -91,35 +98,31 @@ int main(){
                 cg::Vec2f buttonPos = cg::Vec2f(cg::GetWindowSize() / 2.f) - size / 2.f;
                 const float spacing = cg::GetWindowHeight() * 0.05f;
                 if (cg::GUIButton("Start", buttonPos, size)) {
-                    scene = Transition;
+                    UpdateSceneChange(Game, false);
                     player.pos = cg::Vec2f(cg::GetWindowSize() / 2.f); 
                 }
                 buttonPos.y -= size.y + spacing;
 
-                if (cg::GUIButton("Characters", buttonPos, size)){
-                    scene = CharacterStore;
-                }
+                if (cg::GUIButton("Characters", buttonPos, size))
+                    UpdateSceneChange(CharacterStore, false);
             }
 
             // Todo: Make a death screen with stuff like revive, unlock a new character etc
             if (scene == DeathScreen){
-                scene = MainMenu;
-            }
-
-            if (scene == CharacterStore){
-                static StoreItem item(player.GetTexture(), 5, "Cool Dude");
-                item.Draw(0, 0);
+                UpdateSceneChange(MainMenu, false);
             }
 
             std::string fpsText = (std::string)"FPS: " + std::to_string(int(cg::GetAverageFPS()));
             cg::Text(fpsText, cg::Vec2f(10, cg::GetWindowHeight() - cg::MeasureText(fpsText).y - 10));
 
             cg::Draw();
+            UpdateSceneChange(MainMenu, true);
         }
 
         font.Free();
 
         player.DeleteTextures();
+        FreeCharacterTextures();
     }
 
     // Exit

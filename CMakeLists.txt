@@ -4,7 +4,7 @@ project(ShootShot)
 include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_PREFIX_PATH /home/dkooistra/Documenten/C++/CGGL/install)
+set(CMAKE_PREFIX_PATH /home/dkooistra/Documents/CGGL/install)
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
@@ -17,36 +17,10 @@ add_executable(ShootShot
         game.h
         game.cpp
 
+        gui.h
+        gui.cpp
+
         audio.h
-        
-        # ImGui
-        imgui/imgui.cpp
-        imgui/imgui_draw.cpp
-        imgui/imgui_tables.cpp
-        imgui/imgui_widgets.cpp
-        imgui/imgui_demo.cpp
-
-        # ImGui backends
-        imgui/backends/imgui_impl_glfw.cpp
-        imgui/backends/imgui_impl_opengl3.cpp
-
-        # Wrapper
-        imgui/misc/cpp/imgui_stdlib.cpp
-        )
-
-target_include_directories(ShootShot
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/imgui
-)
-
-target_include_directories(ShootShot
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends
-)
-
-target_include_directories(ShootShot
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/imgui/misc/cpp
 )
 
 target_link_libraries(ShootShot

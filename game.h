@@ -10,7 +10,6 @@ enum GameScene {
     MainMenu,
     Game,
     DeathScreen,
-    Transition,
     CharacterStore
 };
 
@@ -22,14 +21,16 @@ class Player {
         void Update();
         void Draw();
 
-        cg::Texture* GetTexture() { return &sprite; }
+        cg::Texture* GetTexture() { return sprite; }
+        void SetSprite(cg::Texture* tex) { sprite = tex; }
 
         void DeleteTextures();
 
         cg::Vec2f pos, velocity = cg::Vec2f(0,0), accel = cg::Vec2f(0,0);
         float size;
     private:
-        cg::Texture sprite, shotgunTex;
+        cg::Texture shotgunTex;
+        cg::Texture* sprite = nullptr;
 };
 
 class Coin {
@@ -72,16 +73,10 @@ void GenerateCoin();
 void UpdateCoins(const Player& player);
 void DrawCoins();
 
-class StoreItem {
-    public:
-        StoreItem(cg::Texture* tex, float price, std::string name) : tex(tex), price(price), name(name) {}
-
-        void Draw(float offset, int index);
-
-        float price;
-        std::string name;
-    private:
-        cg::Texture* tex;
-};
+inline void UpdateSceneChange(GameScene targetScene, bool change){
+    static GameScene queue;
+    if (!change) queue = targetScene;
+    else scene = queue;
+}
 
 #endif

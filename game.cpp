@@ -4,11 +4,6 @@
 #include <format>
 
 Player::Player(cg::Vec2f pos, float size) : pos(pos), size(size) {
-    sprite.LoadImage("tex/player.png");
-    sprite.SetSize(cg::Vec2f(size,size));
-    sprite.SetOrigin(pos, true);
-    sprite.FlipVertically();
-
     shotgunTex.LoadImage("tex/shotgun.png");
     shotgunTex.FlipVertically();
     cg::Vec2f ogSize = shotgunTex.GetSize();
@@ -17,12 +12,12 @@ Player::Player(cg::Vec2f pos, float size) : pos(pos), size(size) {
 }
 
 void Player::Draw(){
-    sprite.SetOrigin(pos, FLAG_CENTERED);
+    sprite->SetOrigin(pos, FLAG_CENTERED);
 
     // Draw 3 sprites for seamless teleportations from one side of the screen to another
-    cg::Draw(sprite, FLAG_NO_BORDER);
-    cg::Draw(sprite, sprite.GetOrigin() + cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite.GetSize(), FLAG_NO_BORDER);
-    cg::Draw(sprite, sprite.GetOrigin() - cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite.GetSize(), FLAG_NO_BORDER);
+    cg::Draw(*sprite, FLAG_NO_BORDER);
+    cg::Draw(*sprite, sprite->GetOrigin() + cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite->GetSize(), FLAG_NO_BORDER);
+    cg::Draw(*sprite, sprite->GetOrigin() - cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite->GetSize(), FLAG_NO_BORDER);
 
     // Draw shotgun rotated towards the mouse
     cg::Vec2f shotgunSize = shotgunTex.GetSize();
@@ -58,7 +53,6 @@ void Player::Draw(){
 
 void Player::DeleteTextures()
 {
-    sprite.Free();
     shotgunTex.Free();
 }
 
@@ -91,7 +85,7 @@ void Player::Update(){
     if (pos.x > cg::GetWindowWidth())
         pos.x -= cg::GetWindowWidth();
 
-    if (pos.y > cg::GetWindowHeight() && std::abs(velocity.y) > 500.f)
+    if (pos.y > cg::GetWindowHeight() && std::abs(velocity.y) > 500.f && velocity.y > 0)
         pos.y = 0;
 
     if (pos.y < 0) {
@@ -116,7 +110,7 @@ void GameOver()
 {
     score = 0;
     cg::Play(failSfx);
-    scene = GameScene::DeathScreen;
+    UpdateSceneChange(DeathScreen, false);
     std::cout << "Game Over!\n";
 }
 
@@ -185,38 +179,5 @@ void DrawCoins(){
         coinTex->SetOrigin(coin.pos);
         coinTex->SetSize(COIN_SIZE);
         cg::Draw(*coinTex);
-    }
-}
-
-void StoreItem::Draw(float offset, int index)
-{
-    cg::Vec2f center = cg::Vec2f(cg::GetWindowSize() / 2.f) - cg::Vec2f(offset, 0.f);
-    cg::Vec2f containerSize = cg::Vec2f(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() / 2.f);
-
-    const float spacing = cg::GetWindowWidth() * 0.05f;
-    center.x += containerSize.x * index + spacing;
-
-    cg::RoundedRectangle(center, containerSize, 15, FLAG_CENTERED);
-
-    const float padding = spacing / 4.f;
-    const float texSize = containerSize.x - padding * 2.f;
-
-    const float containerTop = center.y + containerSize.y / 2.f;
-    const float texCenterY   = containerTop - padding - texSize / 2.f;
-
-    cg::RoundedRectangle(
-        cg::Vec2f(center.x, texCenterY),
-        cg::Vec2f(texSize, texSize),
-        10, FLAG_CENTERED
-    );
-
-    cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - cg::Vec2f(texSize, texSize) / 2.f, cg::Vec2f(texSize, texSize), FLAG_CENTERED);
-
-    cg::Vec2f titleTextPos = cg::Vec2f(center.x, cg::GetWindowHeight() - texCenterY - padding * 2);
-    cg::Text(name, titleTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
-
-    cg::Vec2f buyButtonPos = titleTextPos - cg::Vec2f(0, spacing * 0.85f);
-    if (cg::GUIButton(std::format("Buy for ${}", price), buyButtonPos, cg::Vec2f(texSize, spacing), FLAG_CENTERED)){
-        std::cout << "Bought " << name << ".\n";
     }
 }
