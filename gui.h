@@ -12,6 +12,11 @@ enum Characters {
     Flabbergasted,
     Skull,
     Verity,
+    AngryFace,
+    Psychopath,
+    Dinosaur,
+    Laughing,
+    Aga,
     LastItem
 };
 
@@ -21,7 +26,12 @@ inline std::vector<std::string> characterTexturePaths = {
     "tex/cryingface.png",
     "tex/flabbergasted.png",
     "tex/skull.png",
-    "tex/verity.png"
+    "tex/verity.png",
+    "tex/angryface.png",
+    "tex/psychopath.png",
+    "tex/dinosaur.png",
+    "tex/laughing.png",
+    "tex/aga.png"
 };
 
 inline std::vector<std::string> characterNames = {
@@ -30,7 +40,12 @@ inline std::vector<std::string> characterNames = {
     "Crying Face",
     "Flabbergasted",
     "Skull",
-    "Verity"
+    "Verity",
+    "Angry Face",
+    "Psychopath",
+    "Dinosaur",
+    "Laughing Face",
+    "Aga"
 };
 
 inline std::vector<cg::Texture*> characterTextures(Characters::LastItem);
@@ -53,5 +68,7 @@ class StoreItem {
 };
 
 inline std::vector<StoreItem> characterShopItems(Characters::LastItem);
+
+void DrawLeaderboard(Highscore playerHighscore, cg::Texture* playerTex);
 
 #endif

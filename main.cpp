@@ -38,6 +38,8 @@ int main(){
 
         NewBackgroundColor();
 
+        Highscore playerHighscore{"You", 0, true};
+
         std::string menuText = "ShootShot!";
 
         int musicIndex = 0;
@@ -50,8 +52,23 @@ int main(){
 
         //cg::ToggleMute();
 
+        UpdateSceneChange(MainMenu, false);
+
+        LoadHighscoreProfiles();
+
         while (cg::WindowIsOpen()){
             cg::NewFrame();
+
+            // Funny bunny
+            if (scene == DogCheck){
+                cg::PushPrimaryColor(cg::Color(0,0,0));
+                cg::Rectangle(cg::Vec2f(0,0), cg::Vec2f(cg::GetWindowSize()), FLAG_NO_BORDER);
+                cg::Vec2f size = cg::Vec2f(cg::GetWindowHeight(), cg::GetWindowHeight()) / 4.f;
+                cg::Draw(*characterTextures[Aga], cg::Vec2f(cg::GetWindowSize()) / 2.f - size / 2.f, size);
+                cg::Draw();
+                cg::PopStyle();
+                continue;
+            }
 
             if (!cg::IsPlaying(music[musicIndex])){
                 std::cout << "Music number " << musicIndex << " is finished. Playing next song.\n";
@@ -89,7 +106,7 @@ int main(){
             if (scene == MainMenu){
                 cg::PushFont(bigFont);
                 cg::Text(menuText, 
-                    cg::Vec2f(cg::GetWindowWidth() / 2.f, cg::GetWindowHeight() * 0.75) - cg::MeasureText(menuText) / 2.f,
+                    cg::Vec2f(cg::GetWindowWidth() / 2.f, cg::GetWindowHeight() * 0.65) - cg::MeasureText(menuText) / 2.f,
                     FLAG_USE_SECONDARY_COLOR
                 );
 
@@ -105,10 +122,14 @@ int main(){
 
                 if (cg::GUIButton("Characters", buttonPos, size))
                     UpdateSceneChange(CharacterStore, false);
+
+                DrawLeaderboard(playerHighscore, player.GetTexture());
             }
 
             // Todo: Make a death screen with stuff like revive, unlock a new character etc
             if (scene == DeathScreen){
+                playerHighscore.score = std::max(playerHighscore.score, score);
+                score = 0;
                 UpdateSceneChange(MainMenu, false);
             }
 
@@ -116,13 +137,15 @@ int main(){
             cg::Text(fpsText, cg::Vec2f(10, cg::GetWindowHeight() - cg::MeasureText(fpsText).y - 10));
 
             cg::Draw();
-            UpdateSceneChange(MainMenu, true);
+            UpdateSceneChange(DogCheck, true);
         }
 
         font.Free();
 
         player.DeleteTextures();
         FreeCharacterTextures();
+
+        DeleteHighscoreProfiles();
     }
 
     // Exit

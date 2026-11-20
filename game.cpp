@@ -108,7 +108,6 @@ int Randint(int min, int max){
 
 void GameOver()
 {
-    score = 0;
     cg::Play(failSfx);
     UpdateSceneChange(DeathScreen, false);
     std::cout << "Game Over!\n";
@@ -179,5 +178,33 @@ void DrawCoins(){
         coinTex->SetOrigin(coin.pos);
         coinTex->SetSize(COIN_SIZE);
         cg::Draw(*coinTex);
+    }
+}
+
+void LoadHighscoreProfiles()
+{
+    for (Highscore& score : highscores){
+        try
+        {
+            score.pfp = new cg::Texture(std::string("tex/pfp/" + score.user + ".jpeg").c_str());
+            score.pfp->FlipVertically();
+            std::cout << "Loaded profile picture for " << score.user << ".\n";
+        }
+        catch(const std::exception& e)
+        {
+            std::cout << "Failed to load profile picture for " << score.user << ": " << e.what() << std::endl;
+            delete score.pfp;
+        }
+        
+    }
+}
+
+void DeleteHighscoreProfiles(){
+    for (Highscore& score : highscores){
+        if (score.pfp) {
+            score.pfp->Free();
+            delete score.pfp;
+            std::cout << "Deleting pfp of user " << score.user << "." << std::endl;
+        }
     }
 }

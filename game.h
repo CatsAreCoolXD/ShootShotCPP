@@ -7,6 +7,7 @@
 #define COIN_SIZE cg::Vec2f(50,50)
 
 enum GameScene {
+    DogCheck,
     MainMenu,
     Game,
     DeathScreen,
@@ -78,5 +79,31 @@ inline void UpdateSceneChange(GameScene targetScene, bool change){
     if (!change) queue = targetScene;
     else scene = queue;
 }
+
+struct Highscore {
+    std::string user;
+    int score;
+    bool isPlayer = false;
+    std::string pfpPath = "";
+    cg::Texture* pfp = nullptr;
+};
+
+inline std::vector<Highscore> highscores = {
+    Highscore{"Gabe Newell", 1231},
+    Highscore{"Markiplier", 1229},
+    Highscore{"Lord Verity", 1142},
+    Highscore{"Jensen Huang", 1102},
+    Highscore{"Sam Altman", 999},
+    Highscore{"Jack Black", 866},
+    Highscore{"Donald Duck", 666},
+    Highscore{"MrBeast", 549},
+    Highscore{"Horror Skunx", 476},
+    Highscore{"Captain Sparklez", 322},
+    Highscore{"Judelow", 301},
+    Highscore{"Elon Musk", 265},
+};
+
+void LoadHighscoreProfiles();
+void DeleteHighscoreProfiles();
 
 #endif
