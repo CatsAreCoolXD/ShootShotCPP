@@ -136,7 +136,7 @@ void DrawLeaderboard(Highscore playerHighscore, cg::Texture* playerTex)
                 pfp->SetSize(cg::Vec2f(pfpSize, pfpSize));
                 pfp->SetOrigin(pos + cg::Vec2f(entryHeight, entryHeight) / 2.f - cg::Vec2f(pfpSize, pfpSize) / 2.f);
                 cg::UseTexture(*pfp);
-                cg::RoundedRectangle(pfp->GetOrigin(), pfp->GetSize(), 4);
+                cg::RoundedRectangle(pfp->GetOrigin(), pfp->GetSize(), 5);
                 cg::StopUsingTexture();
                 pfp->SetSize(ogSize);
             }

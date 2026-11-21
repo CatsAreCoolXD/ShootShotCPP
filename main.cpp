@@ -50,7 +50,7 @@ int main(){
 
         cg::Play(music2Sfx);
 
-        //cg::ToggleMute();
+        cg::ToggleMute();
 
         UpdateSceneChange(MainMenu, false);
 
