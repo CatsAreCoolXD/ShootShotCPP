@@ -22,6 +22,7 @@ struct StoreCatalogue {
     int nItems = 0;
     std::vector<std::string> texturePaths;
     std::vector<std::string> names;
+    std::vector<std::string> descriptions;
     std::vector<cg::Texture*> textures;
 
     // First item is assumed to be the default.
@@ -75,6 +76,21 @@ inline StoreCatalogue characterStore {
         "Dinosaur",
         "Laughing Face",
         "Aga"
+    },
+
+    // Descriptions
+    {
+        "A cool dude. He likes his sunglasses.",
+        "Someone turn the AC off!",
+        "They're crying because you aren't #1 on the leaderboard.",
+        "What is he shocked at?!",
+        "Only in ohio",
+        "Ask him anything! He knows everything.",
+        "What'd you make them mad for??",
+        "Who knows what they're up to...",
+        "They look stupid.",
+        "They're just here to have fun :)",
+        "Maga is better."
     }
 };
 
@@ -94,6 +110,11 @@ inline StoreCatalogue shotgunStore {
     // Names
     {
         "Rusty Barrel",
+    },
+
+    // Descriptions
+    {
+        "An old, rusty shotgun you found in an abandened building."
     }
 };
 
