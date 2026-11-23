@@ -1,10 +1,13 @@
 #include "gui.h"
 #include "audio.h"
 
-void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& targetTex)
+void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& targetTex, cg::Font* descriptionFont)
 {
+    const cg::Vec2f descriptionSize = cg::MeasureText(description, descriptionFont);
+    const float textHeight = descriptionSize.y + cg::MeasureText(name).y;
+
     cg::Vec2f center = cg::Vec2f(cg::GetWindowSize() / 2.f) - cg::Vec2f(offset, 0.f);
-    cg::Vec2f containerSize = cg::Vec2f(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() / 2.f);
+    cg::Vec2f containerSize = cg::Vec2f(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() / 2.1f + textHeight);
 
     const float spacing = cg::GetWindowWidth() * 0.05f;
     center.x += (containerSize.x + spacing / 2.f) * index;
@@ -15,7 +18,7 @@ void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& target
     const float texSize = containerSize.x - padding * 2.f;
 
     const float containerTop = center.y + containerSize.y / 2.f;
-    const float texCenterY   = containerTop - padding - texSize / 2.f;
+    const float texCenterY = containerTop - padding - texSize / 2.f;
 
     cg::RoundedRectangle(
         cg::Vec2f(center.x, texCenterY),
@@ -25,10 +28,17 @@ void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& target
 
     cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - cg::Vec2f(texSize, texSize) / 2.f, cg::Vec2f(texSize, texSize), FLAG_CENTERED);
 
-    cg::Vec2f titleTextPos = cg::Vec2f(center.x, cg::GetWindowHeight() - texCenterY - padding * 2);
+    const float titleHeight = cg::MeasureText(name).y;
+    cg::Vec2f titleTextPos = cg::Vec2f(center.x, texCenterY - texSize / 2.f - padding - titleHeight / 2.f);
+    cg::Vec2f descriptionTextPos = titleTextPos - cg::Vec2f(0, descriptionSize.y - padding / 2.f);
+
     cg::Text(name, titleTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
 
-    cg::Vec2f buyButtonPos = titleTextPos - cg::Vec2f(0, spacing * 0.85f);
+    cg::PushFont(*descriptionFont);
+    cg::Text(description, descriptionTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
+    cg::PopFont();
+
+    cg::Vec2f buyButtonPos = descriptionTextPos - cg::Vec2f(0, descriptionSize.y + padding / 2.f);
     std::string buttonText = owned ? (targetTex == tex ? "Equipped" : "Equip") : ("Buy for $" + std::to_string(price));
     if (cg::GUIButton(buttonText, buyButtonPos, cg::Vec2f(texSize, spacing), FLAG_CENTERED)){
         if (!owned && money >= price){
@@ -57,7 +67,7 @@ void LoadStoreCatalogues(Player& player, float size)
 
             std::cout << "Loaded texture for store: \"" << store->texturePaths[i] << "\"\n";
 
-            StoreItem& item = store->storeItems.emplace_back(tex, 25, store->names[i]);
+            StoreItem& item = store->storeItems.emplace_back(tex, 25, store->names[i], store->descriptions[i]);
             if (i > 0) continue;
 
             item.owned = true;
@@ -81,14 +91,13 @@ void FreeStoreCatalogues(){
     }
 }
 
-void DrawStore(float &money, Player &player, StoreCatalogue* store)
+void DrawStore(float &money, Player &player, StoreCatalogue* store, cg::Font* descriptionFont)
 {
     static float offset = 0;
     offset += cg::GetMouseScroll().y * -50;
 
-    for (int i = 0; i < store->nItems; i++){
-        store->storeItems[i].Draw(offset, i, money, *store->targetTexture);
-    }
+    for (int i = 0; i < store->nItems; i++)
+        store->storeItems[i].Draw(offset, i, money, *store->targetTexture, descriptionFont);
 
     const cg::Vec2f backButtonCenter = cg::Vec2f(cg::GetWindowWidth() / 2.f, cg::GetWindowHeight() * 0.9f);
     const cg::Vec2f backButtonSize = cg::Vec2f(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() * 0.1f);

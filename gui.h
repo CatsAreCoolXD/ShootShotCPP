@@ -8,12 +8,12 @@
 class StoreItem {
     public:
         StoreItem() {}
-        StoreItem(cg::Texture* tex, int price, std::string name) : tex(tex), price(price), name(name) {}
+        StoreItem(cg::Texture* tex, int price, std::string name, std::string description) : tex(tex), price(price), name(name), description(description) {}
 
-        void Draw(float offset, int index, float& money, cg::Texture*& targetTex);
+        void Draw(float offset, int index, float& money, cg::Texture*& targetTex, cg::Font* descriptionFont);
 
         int price;
-        std::string name;
+        std::string name, description;
         cg::Texture* tex = nullptr;
         bool owned = false;
 };
@@ -80,10 +80,10 @@ inline StoreCatalogue characterStore {
 
     // Descriptions
     {
-        "A cool dude. He likes his sunglasses.",
+        "A cool dude. He likes his sunglasses.\nTest\nTest\nTest\nTest\nTest",
         "Someone turn the AC off!",
         "They're crying because you aren't #1 on the leaderboard.",
-        "What is he shocked at?!",
+        "What are they shocked at?!",
         "Only in ohio",
         "Ask him anything! He knows everything.",
         "What'd you make them mad for??",
@@ -123,7 +123,7 @@ inline std::vector<StoreCatalogue*> storeCatalogues = {&characterStore, &shotgun
 void LoadStoreCatalogues(Player& player, float size);
 void FreeStoreCatalogues();
 
-void DrawStore(float& money, Player& player, StoreCatalogue* store);
+void DrawStore(float& money, Player& player, StoreCatalogue* store, cg::Font* descriptionFont);
 
 void DrawLeaderboard(Highscore playerHighscore, cg::Texture* playerTex);
 

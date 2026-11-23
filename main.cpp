@@ -21,7 +21,8 @@ int main(){
         cg::PushSecondaryColor(cg::Color(51, 92, 103));
 
         cg::Font font("Fonts/Roboto.ttf", 50);
-        cg::Font bigFont("Fonts/Roboto.ttf",100);
+        cg::Font smallFont("Fonts/Roboto.ttf", 16);
+        cg::Font bigFont("Fonts/Roboto.ttf", 100);
         cg::Font scoreFont("Fonts/ArchivoBlack-Regular.ttf", 200);
         cg::PushFont(font);
 
@@ -102,7 +103,7 @@ int main(){
 
             if (scene == SceneStore){
                 static float money = 100; // Todo
-                DrawStore(money, player, targetStoreCatalogue);
+                DrawStore(money, player, targetStoreCatalogue, &smallFont);
             }
 
             if (scene == SceneMainMenu){
@@ -154,6 +155,7 @@ int main(){
         std::cout << std::endl;
 
         font.Free();
+        smallFont.Free();
         bigFont.Free();
         scoreFont.Free();
 
@@ -165,7 +167,7 @@ int main(){
     // Exit
     cg::Terminate();
 
-    std::cout << "Done with exit code 0." << std::endl;
+    std::cout << "Done, returning exit code 0." << std::endl;
 
     return 0;
 }
