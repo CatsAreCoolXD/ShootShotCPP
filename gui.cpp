@@ -1,7 +1,7 @@
 #include "gui.h"
 #include "audio.h"
 
-void StoreItem::Draw(float offset, int index, float& money, Player& player)
+void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& targetTex)
 {
     cg::Vec2f center = cg::Vec2f(cg::GetWindowSize() / 2.f) - cg::Vec2f(offset, 0.f);
     cg::Vec2f containerSize = cg::Vec2f(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() / 2.f);
@@ -29,7 +29,7 @@ void StoreItem::Draw(float offset, int index, float& money, Player& player)
     cg::Text(name, titleTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
 
     cg::Vec2f buyButtonPos = titleTextPos - cg::Vec2f(0, spacing * 0.85f);
-    std::string buttonText = owned ? (player.GetTexture() == tex ? "Equipped" : "Equip") : ("Buy for $" + std::to_string(price));
+    std::string buttonText = owned ? (targetTex == tex ? "Equipped" : "Equip") : ("Buy for $" + std::to_string(price));
     if (cg::GUIButton(buttonText, buyButtonPos, cg::Vec2f(texSize, spacing), FLAG_CENTERED)){
         if (!owned && money >= price){
             std::cout << "Bought " << name << ".\n";
@@ -37,46 +37,63 @@ void StoreItem::Draw(float offset, int index, float& money, Player& player)
             cg::Sound* purchaseSound = (rand() % 2) == 0 ? purchase1 : purchase2;
             cg::Play(purchaseSound, 2.f);
 
-            player.SetSprite(tex);
+            targetTex = tex;
         } else if (owned)
-            player.SetSprite(tex);
+            targetTex = tex;
     }
 }
 
-void LoadCharacterTextures(Player& player, float size)
+void LoadStoreCatalogues(Player& player, float size)
 {
-    for (int i = 0; i < Characters::LastItem; i++){
-        cg::Texture* tex = new cg::Texture(characterTexturePaths[i].c_str());
-        tex->SetSize(cg::Vec2f(size,size));
-        tex->FlipVertically();
-        characterTextures[i] = tex;
+    characterStore.targetTexture = &player.GetSpriteTexture();
+    shotgunStore.targetTexture = &player.GetShotgunTexture();
 
-        characterShopItems[i] = StoreItem(tex, 25, characterNames[i]);
+    for (StoreCatalogue* store : storeCatalogues) {
+        for (int i = 0; i < store->nItems; i++){
+            cg::Texture* tex = new cg::Texture(store->texturePaths[i].c_str());
+            tex->SetSize(cg::Vec2f(size,size));
+            tex->FlipVertically();
+            store->textures.push_back(tex);
+
+            std::cout << "Loaded texture for store: \"" << store->texturePaths[i] << "\"\n";
+
+            StoreItem& item = store->storeItems.emplace_back(tex, 25, store->names[i]);
+            if (i > 0) continue;
+
+            item.owned = true;
+            *store->targetTexture = item.tex;
+        }
+        
+        // Break line
+        std::cout << std::endl;
     }
-
-    player.SetSprite(characterTextures[0]);
 }
 
-void FreeCharacterTextures(){
-    for (int i = 0; i < Characters::LastItem; i++){
-        delete characterTextures[i];
+void FreeStoreCatalogues(){
+    for (StoreCatalogue* store : storeCatalogues) {
+        for (int i = 0; i < store->nItems; i++){
+            delete store->textures[i];
+            std::cout << "Deleted store texture: \"" << store->texturePaths[i] << "\"\n";
+        }
+
+        // Break line
+        std::cout << std::endl;
     }
 }
 
-void DrawCharacterStore(float &money, Player &player)
+void DrawStore(float &money, Player &player, StoreCatalogue* store)
 {
     static float offset = 0;
     offset += cg::GetMouseScroll().y * -50;
-    for (int i = 0; i < Characters::LastItem; i++){
-        characterShopItems[i].Draw(offset, i, money, player);
+
+    for (int i = 0; i < store->nItems; i++){
+        store->storeItems[i].Draw(offset, i, money, *store->targetTexture);
     }
 
-    if (cg::GUIButton("Return to menu", 
-        cg::Vec2f(cg::GetWindowWidth() / 2.f, cg::GetWindowHeight() * 0.9f), 
-        cg::Vec2f(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() * 0.1f), FLAG_CENTERED
-    )){
-        UpdateSceneChange(MainMenu, false);
-    }
+    const cg::Vec2f backButtonCenter = cg::Vec2f(cg::GetWindowWidth() / 2.f, cg::GetWindowHeight() * 0.9f);
+    const cg::Vec2f backButtonSize = cg::Vec2f(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() * 0.1f);
+    if (cg::GUIButton("Return to menu", backButtonCenter, backButtonSize, FLAG_CENTERED))
+        UpdateSceneChange(SceneMainMenu, false);
 }
 
 void DrawLeaderboard(Highscore playerHighscore, cg::Texture* playerTex)

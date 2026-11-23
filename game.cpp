@@ -4,11 +4,12 @@
 #include <format>
 
 Player::Player(cg::Vec2f pos, float size) : pos(pos), size(size) {
-    shotgunTex.LoadImage("tex/shotgun.png");
-    shotgunTex.FlipVertically();
-    cg::Vec2f ogSize = shotgunTex.GetSize();
-    float scale = std::max(ogSize.x, ogSize.y) / (size * 0.75f);
-    shotgunTex.Scale(1.f /  scale);
+    return;
+    // shotgunTex.LoadImage("tex/shotgun.png");
+    // shotgunTex.FlipVertically();
+    // cg::Vec2f ogSize = shotgunTex.GetSize();
+    // float scale = std::max(ogSize.x, ogSize.y) / (size * 0.75f);
+    // shotgunTex.Scale(1.f /  scale);
 }
 
 void Player::Draw(){
@@ -19,10 +20,10 @@ void Player::Draw(){
     cg::Draw(*sprite, sprite->GetOrigin() + cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite->GetSize(), FLAG_NO_BORDER);
     cg::Draw(*sprite, sprite->GetOrigin() - cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite->GetSize(), FLAG_NO_BORDER);
 
-    // Draw shotgun rotated towards the mouse
-    cg::Vec2f shotgunSize = shotgunTex.GetSize();
+    // Draw shotgun rotated towards the mouse. Todo: integrate this into the CGGL library
+    cg::Vec2f shotgunSize = shotgunTex->GetSize();
     cg::Vec2f origin = pos + cg::Vec2f(size,-size) / 3.f;
-    shotgunTex.SetOrigin(origin);
+    shotgunTex->SetOrigin(origin);
     
     cg::Vec2f mousePos = cg::GetMousePos();
     cg::Vec2f delta = mousePos - origin;
@@ -45,15 +46,10 @@ void Player::Draw(){
         cg::Vertex(a - right, color, cg::Vec2f(0,1))
     };
 
-    cg::UseTexture(shotgunTex);
+    cg::UseTexture(*shotgunTex);
     cg::Triangle(tri1, false);
     cg::Triangle(tri2, false);
     cg::StopUsingTexture();
-}
-
-void Player::DeleteTextures()
-{
-    shotgunTex.Free();
 }
 
 void Player::Update(){
@@ -65,7 +61,7 @@ void Player::Update(){
     velocity = velocity + accel * cg::GetDeltaTime();
 
     constexpr float maxBoost = 500.f;
-    if (scene == Game && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT) && pos.y < cg::GetWindowHeight()){
+    if (scene == SceneGame && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT) && pos.y < cg::GetWindowHeight()){
         cg::Vec2f delta = pos - cg::Vec2f(cg::GetMousePos());
         float intensity = std::min(delta.Length(), maxBoost);
 
@@ -94,7 +90,7 @@ void Player::Update(){
         velocity = cg::Vec2f(0,0);
     }
 
-    if (scene != DeathScreen) scene = Game;
+    if (scene != SceneDeathScreen) scene = SceneGame;
 }
 
 bool loadedCoinTextures = false;
@@ -109,7 +105,7 @@ int Randint(int min, int max){
 void GameOver()
 {
     cg::Play(failSfx);
-    UpdateSceneChange(DeathScreen, false);
+    UpdateSceneChange(SceneDeathScreen, false);
     std::cout << "Game Over!\n";
 }
 
@@ -155,12 +151,12 @@ void UpdateCoins(const Player &player)
 
 void DrawCoins(){
     if (!loadedCoinTextures){
-        coin1.LoadImage("tex/coin1.png");
-        coin2.LoadImage("tex/coin2.png");
-        coin3.LoadImage("tex/coin3.png");
-        coin4.LoadImage("tex/coin4.png");
-        coin5.LoadImage("tex/coin5.png");
-        coin6.LoadImage("tex/coin6.png");
+        coin2.LoadImage("tex/coins/coin2.png");
+        coin1.LoadImage("tex/coins/coin1.png");
+        coin3.LoadImage("tex/coins/coin3.png");
+        coin4.LoadImage("tex/coins/coin4.png");
+        coin5.LoadImage("tex/coins/coin5.png");
+        coin6.LoadImage("tex/coins/coin6.png");
 
         coinTextures = { &coin1, &coin2, &coin3, &coin4, &coin5, &coin6 };
         loadedCoinTextures = true;
@@ -195,8 +191,10 @@ void LoadHighscoreProfiles()
             std::cout << "Failed to load profile picture for " << score.user << ": " << e.what() << std::endl;
             delete score.pfp;
         }
-        
     }
+
+    // Break line
+    std::cout << std::endl;
 }
 
 void DeleteHighscoreProfiles(){
@@ -207,4 +205,6 @@ void DeleteHighscoreProfiles(){
             std::cout << "Deleting pfp of user " << score.user << "." << std::endl;
         }
     }
+    // Break line
+    std::cout << std::endl;
 }

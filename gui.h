@@ -5,61 +5,12 @@
 
 #include "game.h"
 
-enum Characters {
-    CoolDude,
-    ColdFace,
-    CryingFace,
-    Flabbergasted,
-    Skull,
-    Verity,
-    AngryFace,
-    Psychopath,
-    Dinosaur,
-    Laughing,
-    Aga,
-    LastItem
-};
-
-inline std::vector<std::string> characterTexturePaths = {
-    "tex/cooldude.png",
-    "tex/coldface.png",
-    "tex/cryingface.png",
-    "tex/flabbergasted.png",
-    "tex/skull.png",
-    "tex/verity.png",
-    "tex/angryface.png",
-    "tex/psychopath.png",
-    "tex/dinosaur.png",
-    "tex/laughing.png",
-    "tex/aga.png"
-};
-
-inline std::vector<std::string> characterNames = {
-    "Cool Dude",
-    "Cold Face",
-    "Crying Face",
-    "Flabbergasted",
-    "Skull",
-    "Verity",
-    "Angry Face",
-    "Psychopath",
-    "Dinosaur",
-    "Laughing Face",
-    "Aga"
-};
-
-inline std::vector<cg::Texture*> characterTextures(Characters::LastItem);
-
-void LoadCharacterTextures(Player& player, float size);
-void FreeCharacterTextures();
-void DrawCharacterStore(float& money, Player& player);
-
 class StoreItem {
     public:
         StoreItem() {}
         StoreItem(cg::Texture* tex, int price, std::string name) : tex(tex), price(price), name(name) {}
 
-        void Draw(float offset, int index, float& money, Player& player);
+        void Draw(float offset, int index, float& money, cg::Texture*& targetTex);
 
         int price;
         std::string name;
@@ -67,7 +18,91 @@ class StoreItem {
         bool owned = false;
 };
 
-inline std::vector<StoreItem> characterShopItems(Characters::LastItem);
+struct StoreCatalogue {
+    int nItems = 0;
+    std::vector<std::string> texturePaths;
+    std::vector<std::string> names;
+    std::vector<cg::Texture*> textures;
+
+    // First item is assumed to be the default.
+    std::vector<StoreItem> storeItems;
+    cg::Texture** targetTexture = nullptr;
+};
+
+enum CharacterIds {
+    CIDCoolDude,
+    CIDColdFace,
+    CIDCryingFace,
+    CIDFlabbergasted,
+    CIDSkull,
+    CIDVerity,
+    CIDAngryFace,
+    CIDPsychopath,
+    CIDDinosaur,
+    CIDLaughing,
+    CIDAga,
+    CIDLastItem
+};
+
+inline StoreCatalogue characterStore {
+    CIDLastItem,
+
+    // Texture paths
+    {
+        "tex/characters/cooldude.png",
+        "tex/characters/coldface.png",
+        "tex/characters/cryingface.png",
+        "tex/characters/flabbergasted.png",
+        "tex/characters/skull.png",
+        "tex/characters/verity.png",
+        "tex/characters/angryface.png",
+        "tex/characters/psychopath.png",
+        "tex/characters/dinosaur.png",
+        "tex/characters/laughing.png",
+        "tex/characters/aga.png"
+    },
+
+    // Names
+    {
+        "Cool Dude",
+        "Cold Face",
+        "Crying Face",
+        "Flabbergasted",
+        "Skull",
+        "Verity",
+        "Angry Face",
+        "Psychopath",
+        "Dinosaur",
+        "Laughing Face",
+        "Aga"
+    }
+};
+
+enum ShotgunIds {
+    SIDDefault,
+    SIDLastItem
+};
+
+inline StoreCatalogue shotgunStore {
+    SIDLastItem,
+
+    // Texture paths
+    {
+        "tex/shotguns/shotgun.png"
+    },
+
+    // Names
+    {
+        "Rusty Barrel",
+    }
+};
+
+inline std::vector<StoreCatalogue*> storeCatalogues = {&characterStore, &shotgunStore};
+
+void LoadStoreCatalogues(Player& player, float size);
+void FreeStoreCatalogues();
+
+void DrawStore(float& money, Player& player, StoreCatalogue* store);
 
 void DrawLeaderboard(Highscore playerHighscore, cg::Texture* playerTex);
 

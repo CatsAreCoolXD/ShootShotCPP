@@ -26,7 +26,7 @@ int main(){
         cg::PushFont(font);
 
         Player player(cg::GetWindowSize() / 2.f, 100);
-        LoadCharacterTextures(player, 100);
+        LoadStoreCatalogues(player, 100);
 
         cg::Texture background("tex/background.png");
         background.SetOrigin(cg::Vec2f(0,0));
@@ -52,19 +52,21 @@ int main(){
 
         cg::ToggleMute();
 
-        UpdateSceneChange(MainMenu, false);
+        UpdateSceneChange(SceneMainMenu, false);
 
         LoadHighscoreProfiles();
+
+        StoreCatalogue* targetStoreCatalogue = nullptr;;
 
         while (cg::WindowIsOpen()){
             cg::NewFrame();
 
             // Funny bunny
-            if (scene == DogCheck){
+            if (scene == SceneDogCheck){
                 cg::PushPrimaryColor(cg::Color(0,0,0));
                 cg::Rectangle(cg::Vec2f(0,0), cg::Vec2f(cg::GetWindowSize()), FLAG_NO_BORDER);
                 cg::Vec2f size = cg::Vec2f(cg::GetWindowHeight(), cg::GetWindowHeight()) / 4.f;
-                cg::Draw(*characterTextures[Aga], cg::Vec2f(cg::GetWindowSize()) / 2.f - size / 2.f, size);
+                cg::Draw(*characterStore.textures[CIDAga], cg::Vec2f(cg::GetWindowSize()) / 2.f - size / 2.f, size);
                 cg::Draw();
                 cg::PopStyle();
                 continue;
@@ -79,11 +81,11 @@ int main(){
             background.SetTint(backgroundTint);
             cg::Draw(background);
 
-            if (scene != Game && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
+            if (scene != SceneGame && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
                 cg::Play(clickSfx, 10.f);
             }
 
-            if (scene == Game){
+            if (scene == SceneGame){
                 cg::PushFont(scoreFont);
                 std::string scoreText = std::to_string(score);
                 cg::PushPrimaryColor(cg::Color(128,128,128,128));
@@ -98,12 +100,12 @@ int main(){
             DrawCoins();
             player.Draw();
 
-            if (scene == CharacterStore){
+            if (scene == SceneStore){
                 static float money = 100; // Todo
-                DrawCharacterStore(money, player);
+                DrawStore(money, player, targetStoreCatalogue);
             }
 
-            if (scene == MainMenu){
+            if (scene == SceneMainMenu){
                 cg::PushFont(bigFont);
                 cg::Text(menuText, 
                     cg::Vec2f(cg::GetWindowWidth() / 2.f, cg::GetWindowHeight() * 0.65) - cg::MeasureText(menuText) / 2.f,
@@ -115,41 +117,55 @@ int main(){
                 cg::Vec2f buttonPos = cg::Vec2f(cg::GetWindowSize() / 2.f) - size / 2.f;
                 const float spacing = cg::GetWindowHeight() * 0.05f;
                 if (cg::GUIButton("Start", buttonPos, size)) {
-                    UpdateSceneChange(Game, false);
+                    UpdateSceneChange(SceneGame, false);
                     player.pos = cg::Vec2f(cg::GetWindowSize() / 2.f); 
                 }
                 buttonPos.y -= size.y + spacing;
 
-                if (cg::GUIButton("Characters", buttonPos, size))
-                    UpdateSceneChange(CharacterStore, false);
+                if (cg::GUIButton("Character Store", buttonPos, size)) {
+                    targetStoreCatalogue = &characterStore;
+                    UpdateSceneChange(SceneStore, false);
+                }
 
-                DrawLeaderboard(playerHighscore, player.GetTexture());
+                buttonPos.y -= size.y + spacing;
+
+                if (cg::GUIButton("Shotgun Store", buttonPos, size)) {
+                    targetStoreCatalogue = &shotgunStore;
+                    UpdateSceneChange(SceneStore, false);
+                }
+
+                DrawLeaderboard(playerHighscore, player.GetSpriteTexture());
             }
 
             // Todo: Make a death screen with stuff like revive, unlock a new character etc
-            if (scene == DeathScreen){
+            if (scene == SceneDeathScreen){
                 playerHighscore.score = std::max(playerHighscore.score, score);
                 score = 0;
-                UpdateSceneChange(MainMenu, false);
+                UpdateSceneChange(SceneMainMenu, false);
             }
 
             std::string fpsText = (std::string)"FPS: " + std::to_string(int(cg::GetAverageFPS()));
             cg::Text(fpsText, cg::Vec2f(10, cg::GetWindowHeight() - cg::MeasureText(fpsText).y - 10));
 
             cg::Draw();
-            UpdateSceneChange(DogCheck, true);
+            UpdateSceneChange(SceneDogCheck, true);
         }
+        // Break line
+        std::cout << std::endl;
 
         font.Free();
+        bigFont.Free();
+        scoreFont.Free();
 
-        player.DeleteTextures();
-        FreeCharacterTextures();
+        FreeStoreCatalogues();
 
         DeleteHighscoreProfiles();
     }
 
     // Exit
     cg::Terminate();
+
+    std::cout << "Done with exit code 0." << std::endl;
 
     return 0;
 }

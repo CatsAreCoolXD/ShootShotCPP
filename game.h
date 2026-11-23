@@ -7,14 +7,14 @@
 #define COIN_SIZE cg::Vec2f(50,50)
 
 enum GameScene {
-    DogCheck,
-    MainMenu,
-    Game,
-    DeathScreen,
-    CharacterStore
+    SceneDogCheck,
+    SceneMainMenu,
+    SceneGame,
+    SceneDeathScreen,
+    SceneStore
 };
 
-inline GameScene scene = GameScene::MainMenu;
+inline GameScene scene = GameScene::SceneMainMenu;
 
 class Player {
     public:
@@ -22,15 +22,15 @@ class Player {
         void Update();
         void Draw();
 
-        cg::Texture* GetTexture() { return sprite; }
+        cg::Texture*& GetSpriteTexture() { return sprite; }
+        cg::Texture*& GetShotgunTexture() { return shotgunTex; }
         void SetSprite(cg::Texture* tex) { sprite = tex; }
-
-        void DeleteTextures();
+        void SetShotgunTexture(cg::Texture* tex) { shotgunTex = tex; }
 
         cg::Vec2f pos, velocity = cg::Vec2f(0,0), accel = cg::Vec2f(0,0);
         float size;
     private:
-        cg::Texture shotgunTex;
+        cg::Texture* shotgunTex;
         cg::Texture* sprite = nullptr;
 };
 
