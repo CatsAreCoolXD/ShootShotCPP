@@ -1,4 +1,1 @@
-cmake -B build
-cmake --build build
-./build/ShootShot
-
+cmake -B build && cmake --build build && ./build/ShootShot

@@ -1,7 +1,10 @@
 #include "gui.h"
 #include "audio.h"
 
-void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& targetTex, cg::Font* descriptionFont)
+StoreItem::StoreItem(cg::Texture *tex, const CosmeticInfo &info) : 
+    tex(tex), price(info.price), name(info.name), description(info.description), rarity(info.rarity) {}
+
+void StoreItem::Draw(float offset, int index, float &money, cg::Texture *&targetTex, cg::Font *descriptionFont)
 {
     const float spacing = cg::GetWindowWidth() * 0.025f;
     const float padding = spacing / 4.f;
@@ -25,11 +28,13 @@ void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& target
     const float containerTop = center.y + containerSize.y / 2.f;
     const float texCenterY = containerTop - spacing / 2.f - texSize / 2.f;
 
+    cg::PushPrimaryColor(rarityColors[rarity]);
     cg::RoundedRectangle(
         cg::Vec2f(center.x, texCenterY),
         cg::Vec2f(texSize, texSize),
         10, FLAG_CENTERED
     );
+    cg::PopStyle();
 
     cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - cg::Vec2f(texSize, texSize) / 2.f, cg::Vec2f(texSize, texSize));
 
@@ -44,6 +49,7 @@ void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& target
 
     cg::Vec2f buyButtonPos = descriptionTextPos - cg::Vec2f(0, descriptionSize.y / 2.f + padding + buttonSize.y / 2.f);
     std::string buttonText = owned ? (targetTex == tex ? "Equipped" : "Equip") : ("Buy for $" + std::to_string(price));
+    cg::PushPrimaryColor(rarityColors[rarity]);
     if (cg::GUIButton(buttonText, buyButtonPos, buttonSize, FLAG_CENTERED)){
         if (!owned && money >= price){
             std::cout << "Bought " << name << ".\n";
@@ -55,6 +61,7 @@ void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& target
         } else if (owned)
             targetTex = tex;
     }
+    cg::PopStyle();
 }
 
 void LoadStoreCatalogues(Player& player, float size)
@@ -63,17 +70,25 @@ void LoadStoreCatalogues(Player& player, float size)
     shotgunStore.targetTexture = &player.GetShotgunTexture();
 
     for (StoreCatalogue* store : storeCatalogues) {
+        // Sort items by price here so I don't have to
+        std::sort(store->cosmeticsInfo.begin(), store->cosmeticsInfo.end(), [](const CosmeticInfo& a, const CosmeticInfo& b){
+            if (a.rarity == b.rarity) return a.price < b.price;
+            return a.rarity < b.rarity;
+        });
+
         for (int i = 0; i < store->nItems; i++){
-            cg::Texture* tex = new cg::Texture(store->texturePaths[i].c_str());
+            const CosmeticInfo& info = store->cosmeticsInfo[i];
+            cg::Texture* tex = new cg::Texture(info.texPath.c_str());
             tex->SetSize(cg::Vec2f(size,size));
             tex->FlipVertically();
             store->textures.push_back(tex);
 
-            std::cout << "Loaded texture for store: \"" << store->texturePaths[i] << "\"\n";
+            std::cout << "Loaded texture for store: \"" << info.texPath << "\"\n";
 
-            StoreItem& item = store->storeItems.emplace_back(tex, 25, store->names[i], store->descriptions[i]);
+            StoreItem& item = store->storeItems.emplace_back(tex, info);
             if (i > 0) continue;
 
+            // Equip default item
             item.owned = true;
             *store->targetTexture = item.tex;
         }
@@ -87,7 +102,7 @@ void FreeStoreCatalogues(){
     for (StoreCatalogue* store : storeCatalogues) {
         for (int i = 0; i < store->nItems; i++){
             delete store->textures[i];
-            std::cout << "Deleted store texture: \"" << store->texturePaths[i] << "\"\n";
+            std::cout << "Deleted store texture: \"" << store->cosmeticsInfo[i].texPath << "\"\n";
         }
 
         // Break line

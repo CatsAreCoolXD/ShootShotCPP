@@ -5,14 +5,42 @@
 
 #include "game.h"
 
+enum Rarity {
+    Common,
+    Rare,
+    Epic,
+    Legendary,
+    Mythical,
+    Heavenly
+};
+
+// https://www.color-hex.com/color-palette/38466
+inline const cg::Color rarityColors[6] = {
+    cg::Color(255,255,255),
+    cg::Color(0,112,221),
+    cg::Color(163,53,238),
+    cg::Color(255,128,0),
+    cg::Color(245,66,230),
+    cg::Color(255,234,0)
+};
+
+struct CosmeticInfo {
+    std::string name;
+    std::string description;
+    std::string texPath;
+    int price;
+    Rarity rarity;
+};
+
 class StoreItem {
     public:
         StoreItem() {}
-        StoreItem(cg::Texture* tex, int price, std::string name, std::string description) : tex(tex), price(price), name(name), description(description) {}
+        StoreItem(cg::Texture* tex, const CosmeticInfo& info);
 
         void Draw(float offset, int index, float& money, cg::Texture*& targetTex, cg::Font* descriptionFont);
 
         int price;
+        Rarity rarity;
         std::string name, description;
         cg::Texture* tex = nullptr;
         bool owned = false;
@@ -20,9 +48,7 @@ class StoreItem {
 
 struct StoreCatalogue {
     int nItems = 0;
-    std::vector<std::string> texturePaths;
-    std::vector<std::string> names;
-    std::vector<std::string> descriptions;
+    std::vector<CosmeticInfo> cosmeticsInfo;
     std::vector<cg::Texture*> textures;
 
     // First item is assumed to be the default.
@@ -30,6 +56,8 @@ struct StoreCatalogue {
     cg::Texture** targetTexture = nullptr;
 };
 
+// Ids are currently not used, however you should still update them.
+// If you don't, LastItem will be wrong which is actually in use.
 enum CharacterIds {
     CIDCoolDude,
     CIDColdFace,
@@ -45,52 +73,96 @@ enum CharacterIds {
     CIDLastItem
 };
 
+/*
+        {
+            name, 
+            desc, 
+            path, 
+            price, 
+            rarity
+        },
+*/
 inline StoreCatalogue characterStore {
     CIDLastItem,
 
-    // Texture paths
     {
-        "tex/characters/cooldude.png",
-        "tex/characters/coldface.png",
-        "tex/characters/cryingface.png",
-        "tex/characters/flabbergasted.png",
-        "tex/characters/skull.png",
-        "tex/characters/verity.png",
-        "tex/characters/angryface.png",
-        "tex/characters/psychopath.png",
-        "tex/characters/dinosaur.png",
-        "tex/characters/laughing.png",
-        "tex/characters/aga.png"
-    },
-
-    // Names
-    {
-        "Cool Dude",
-        "Cold Face",
-        "Crying Face",
-        "Flabbergasted",
-        "Skull",
-        "Verity",
-        "Angry Face",
-        "Psychopath",
-        "Dinosaur",
-        "Laughing Face",
-        "Aga"
-    },
-
-    // Descriptions
-    {
-        "A cool dude. He likes his sunglasses.\n\nNo perks.",
-        "Someone turn the AC off!\n\n- Freezing: Time moves slower.",
-        "Become #1 on the leaderboard to shush them.\n\n- Propelling Tears:\nLaunches tears that decrease your gravity.",
-        "What are they shocked at?!\n\n- Shocked: Coins are worth +1.",
-        ":skull:\n\n- Undead: Immune to death but coins are nerfed.",
-        "Ask him anything! He knows everything.\n\n- Verity: Predicts what's coming next.",
-        "Why'd you make them mad??\n\n- Rage: Speeds up time.",
-        "Who knows what they're up to...\n\n- Crazy: On RMB, teleport to the nearest coin.",
-        "They look stupid.\n\n- Apex Predator: Coins run away from you,\nbut they are worth more.",
-        "They're just here to have fun :)\n\n- Curious: You attract coins, but they're worth less.",
-        "Aga.\n\n- Aga: Aga."
+        {
+            "Cool Dude",
+            "A cool dude. He likes his sunglasses.\n\nNo perks.",
+            "tex/characters/cooldude.png",
+            0,
+            Common
+        },
+        {
+            "Cold Face",
+            "Someone turn the AC off!\n\n- Freezing: Time moves slower.",
+            "tex/characters/coldface.png",
+            100,
+            Common
+        },
+        {
+            "Crying Face",
+            "Become #1 on the leaderboard to shush them.\n\n- Propelling Tears:\nLaunches tears that decrease your gravity.",
+            "tex/characters/cryingface.png",
+            75,
+            Common
+        },
+        {
+            "Flabbergasted",
+            "What are they shocked at?!\n\n- Shocked: Coins are worth +1.",
+            "tex/characters/flabbergasted.png",
+            0,
+            Rare
+        },
+        {
+            "Skull",
+            ":skull:\n\n- Undead: Immune to death but coins are nerfed.",
+            "tex/characters/skull.png",
+            0,
+            Epic
+        },
+        {
+            "Verity",
+            "Ask him anything! He knows everything.\n\n- Verity: Predicts what's coming next.",
+            "tex/characters/verity.png",
+            0,
+            Legendary
+        },
+        {
+            "Angry Face",
+            "Why'd you make them mad??\n\n- Rage: Speeds up time.",
+            "tex/characters/angryface.png",
+            0,
+            Epic
+        },
+        {
+            "Psychopath",
+            "Who knows what they're up to...\n\n- Crazy: On RMB, teleport to the nearest coin.",
+            "tex/characters/psychopath.png",
+            0,
+            Legendary
+        },
+        {
+            "Dinosaur",
+            "They look stupid.\n\n- Apex Predator: Coins run away from you,\nbut they are worth more.",
+            "tex/characters/dinosaur.png",
+            0,
+            Epic
+        },
+        {
+            "Laughing Face",
+            "They're just here to have fun :)\n\n- Curious: You attract coins, but they're worth less.",
+            "tex/characters/laughing.png",
+            0,
+            Epic
+        },
+        {
+            "Aga",
+            "Aga.\n\n- Aga: Aga.",
+            "tex/characters/aga.png",
+            0,
+            Legendary
+        }
     }
 };
 
@@ -102,19 +174,14 @@ enum ShotgunIds {
 inline StoreCatalogue shotgunStore {
     SIDLastItem,
 
-    // Texture paths
     {
-        "tex/shotguns/shotgun.png"
-    },
-
-    // Names
-    {
-        "Rusty Barrel",
-    },
-
-    // Descriptions
-    {
-        "An old, rusty and boring shotgun.\n\n- No perks."
+        {
+            "Rusty Barrel",
+            "An old, rusty and boring shotgun.\n\n- No perks.",
+            "tex/shotguns/shotgun.png",
+            0,
+            Common
+        }
     }
 };
 
