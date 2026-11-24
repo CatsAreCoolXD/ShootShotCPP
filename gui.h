@@ -80,17 +80,17 @@ inline StoreCatalogue characterStore {
 
     // Descriptions
     {
-        "A cool dude. He likes his sunglasses.",
+        "A cool dude. He likes his sunglasses.\n\nNo perks.",
         "Someone turn the AC off!\n\n- Freezing: Time moves slower.",
         "Become #1 on the leaderboard to shush them.\n\n- Propelling Tears:\nLaunches tears that decrease your gravity.",
-        "What are they shocked at?!",
+        "What are they shocked at?!\n\n- Shocked: Coins are worth +1.",
         ":skull:\n\n- Undead: Immune to death but coins are nerfed.",
         "Ask him anything! He knows everything.\n\n- Verity: Predicts what's coming next.",
         "Why'd you make them mad??\n\n- Rage: Speeds up time.",
         "Who knows what they're up to...\n\n- Crazy: On RMB, teleport to the nearest coin.",
-        "They look stupid.\n\n- Dumb fuck: -",
-        "They're just here to have fun :)",
-        "Muga is better."
+        "They look stupid.\n\n- Apex Predator: Coins run away from you,\nbut they are worth more.",
+        "They're just here to have fun :)\n\n- Curious: You attract coins, but they're worth less.",
+        "Aga.\n\n- Aga: Aga."
     }
 };
 
@@ -114,7 +114,7 @@ inline StoreCatalogue shotgunStore {
 
     // Descriptions
     {
-        "An old, rusty and boring shotgun."
+        "An old, rusty and boring shotgun.\n\n- No perks."
     }
 };
 
