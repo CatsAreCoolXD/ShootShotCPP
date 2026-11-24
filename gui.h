@@ -81,16 +81,16 @@ inline StoreCatalogue characterStore {
     // Descriptions
     {
         "A cool dude. He likes his sunglasses.",
-        "Someone turn the AC off!",
-        "Become #1 on the leaderboard to shush them.",
+        "Someone turn the AC off!\n\n- Freezing: Time moves slower.",
+        "Become #1 on the leaderboard to shush them.\n\n- Propelling Tears:\nLaunches tears that decrease your gravity.",
         "What are they shocked at?!",
-        "Only in ohio",
-        "Ask him anything! He knows everything.",
-        "Why'd you make them mad??",
-        "Who knows what they're up to...",
-        "They look stupid.",
+        ":skull:\n\n- Undead: Immune to death but coins are nerfed.",
+        "Ask him anything! He knows everything.\n\n- Verity: Predicts what's coming next.",
+        "Why'd you make them mad??\n\n- Rage: Speeds up time.",
+        "Who knows what they're up to...\n\n- Crazy: On RMB, teleport to the nearest coin.",
+        "They look stupid.\n\n- Dumb fuck: -",
         "They're just here to have fun :)",
-        "Maga is better."
+        "Muga is better."
     }
 };
 
@@ -114,7 +114,7 @@ inline StoreCatalogue shotgunStore {
 
     // Descriptions
     {
-        "An old, rusty shotgun you found in an abandened building."
+        "An old, rusty and boring shotgun."
     }
 };
 
