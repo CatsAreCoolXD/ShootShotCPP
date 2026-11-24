@@ -80,13 +80,13 @@ inline StoreCatalogue characterStore {
 
     // Descriptions
     {
-        "A cool dude. He likes his sunglasses.\nTest\nTest\nTest\nTest\nTest",
+        "A cool dude. He likes his sunglasses.",
         "Someone turn the AC off!",
-        "They're crying because you aren't #1 on the leaderboard.",
+        "Become #1 on the leaderboard to shush them.",
         "What are they shocked at?!",
         "Only in ohio",
         "Ask him anything! He knows everything.",
-        "What'd you make them mad for??",
+        "Why'd you make them mad??",
         "Who knows what they're up to...",
         "They look stupid.",
         "They're just here to have fun :)",

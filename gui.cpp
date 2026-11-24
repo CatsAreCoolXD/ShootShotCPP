@@ -3,22 +3,27 @@
 
 void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& targetTex, cg::Font* descriptionFont)
 {
+    const float spacing = cg::GetWindowWidth() * 0.025f;
+    const float padding = spacing / 4.f;
     const cg::Vec2f descriptionSize = cg::MeasureText(description, descriptionFont);
-    const float textHeight = descriptionSize.y + cg::MeasureText(name).y;
+    const float nameHeight = cg::MeasureText(name).y;
+    const float containerWidth = cg::GetWindowWidth() / 5.f;
+    const float texSize = containerWidth - spacing; // On both sides there will be spacing / 2.f distance to the edge
+    const cg::Vec2f buttonSize(texSize, spacing * 2);
+    cg::Vec2f containerSize = cg::Vec2f(cg::GetWindowWidth() / 5.f, 
+        spacing + texSize
+        + nameHeight + padding 
+        + descriptionSize.y + padding 
+        + buttonSize.y + spacing / 2.f
+    );
 
     cg::Vec2f center = cg::Vec2f(cg::GetWindowSize() / 2.f) - cg::Vec2f(offset, 0.f);
-    cg::Vec2f containerSize = cg::Vec2f(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() / 2.1f + textHeight);
-
-    const float spacing = cg::GetWindowWidth() * 0.05f;
     center.x += (containerSize.x + spacing / 2.f) * index;
 
     cg::RoundedRectangle(center, containerSize, 15, FLAG_CENTERED);
 
-    const float padding = spacing / 4.f;
-    const float texSize = containerSize.x - padding * 2.f;
-
     const float containerTop = center.y + containerSize.y / 2.f;
-    const float texCenterY = containerTop - padding - texSize / 2.f;
+    const float texCenterY = containerTop - spacing / 2.f - texSize / 2.f;
 
     cg::RoundedRectangle(
         cg::Vec2f(center.x, texCenterY),
@@ -26,11 +31,10 @@ void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& target
         10, FLAG_CENTERED
     );
 
-    cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - cg::Vec2f(texSize, texSize) / 2.f, cg::Vec2f(texSize, texSize), FLAG_CENTERED);
+    cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - cg::Vec2f(texSize, texSize) / 2.f, cg::Vec2f(texSize, texSize));
 
-    const float titleHeight = cg::MeasureText(name).y;
-    cg::Vec2f titleTextPos = cg::Vec2f(center.x, texCenterY - texSize / 2.f - padding - titleHeight / 2.f);
-    cg::Vec2f descriptionTextPos = titleTextPos - cg::Vec2f(0, descriptionSize.y - padding / 2.f);
+    cg::Vec2f titleTextPos = cg::Vec2f(center.x, texCenterY - texSize / 2.f - spacing / 2.f - nameHeight / 2.f);
+    cg::Vec2f descriptionTextPos = titleTextPos - cg::Vec2f(0, nameHeight / 2.f + padding + descriptionSize.y / 2.f);
 
     cg::Text(name, titleTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
 
@@ -38,9 +42,9 @@ void StoreItem::Draw(float offset, int index, float& money, cg::Texture*& target
     cg::Text(description, descriptionTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
     cg::PopFont();
 
-    cg::Vec2f buyButtonPos = descriptionTextPos - cg::Vec2f(0, descriptionSize.y + padding / 2.f);
+    cg::Vec2f buyButtonPos = descriptionTextPos - cg::Vec2f(0, descriptionSize.y / 2.f + padding + buttonSize.y / 2.f);
     std::string buttonText = owned ? (targetTex == tex ? "Equipped" : "Equip") : ("Buy for $" + std::to_string(price));
-    if (cg::GUIButton(buttonText, buyButtonPos, cg::Vec2f(texSize, spacing), FLAG_CENTERED)){
+    if (cg::GUIButton(buttonText, buyButtonPos, buttonSize, FLAG_CENTERED)){
         if (!owned && money >= price){
             std::cout << "Bought " << name << ".\n";
             owned = true;
