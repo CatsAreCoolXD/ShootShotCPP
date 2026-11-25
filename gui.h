@@ -46,9 +46,16 @@ class StoreItem {
         bool owned = false;
 };
 
+enum TexScalingMethod {
+    TSCLinear,
+    TSCNearest
+};
+
 struct StoreCatalogue {
     int nItems = 0;
     std::vector<CosmeticInfo> cosmeticsInfo;
+    TexScalingMethod scalingMethod;
+
     std::vector<cg::Texture*> textures;
 
     // First item is assumed to be the default.
@@ -163,7 +170,9 @@ inline StoreCatalogue characterStore {
             1999,
             Mythical
         }
-    }
+    },
+
+    TSCLinear
 };
 
 enum GunIds {
@@ -179,7 +188,7 @@ inline StoreCatalogue gunStore {
     {
         {
             "Rusty Barrel",
-            "An old, rusty and boring shotgun.\n\n- No perks.",
+            "An old, rusty and boring shotgun.",
             "tex/guns/shotgun.png",
             0,
             Common
@@ -192,13 +201,16 @@ inline StoreCatalogue gunStore {
             Common
         },
         {
-            "Sawed-Off Shotgun",
-            "A shotgun with it's edge sawed off. Makes for a bigger blast.",
+            "Sawed-Off\nShotgun",
+            "A shotgun with it's edge sawed off.\nMakes for a bigger blast.",
             "tex/guns/SawedOffShotgun.png",
             199,
             Rare
         }
-    }
+    },
+
+    // Textures are pixel art so scale them appropiatly.
+    TSCNearest
 };
 
 inline std::vector<StoreCatalogue*> storeCatalogues = {&characterStore, &gunStore};

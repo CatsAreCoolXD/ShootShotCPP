@@ -16,11 +16,17 @@ void Player::Draw(){
     sprite->SetOrigin(pos, FLAG_CENTERED);
 
     // Draw 3 sprites for seamless teleportations from one side of the screen to another
+    cg::Vec2f ogSize = sprite->GetSize();
+    ScaleTex(sprite, cg::Vec2f(size,size));
+    sprite->SetOrigin(pos - sprite->GetSize() / 2.f);
     cg::Draw(*sprite, FLAG_NO_BORDER);
     cg::Draw(*sprite, sprite->GetOrigin() + cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite->GetSize(), FLAG_NO_BORDER);
     cg::Draw(*sprite, sprite->GetOrigin() - cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite->GetSize(), FLAG_NO_BORDER);
+    sprite->SetSize(ogSize);
 
     // Draw shotgun rotated towards the mouse. Todo: integrate this into the CGGL library
+    ogSize = gunTex->GetSize();
+    gunTex->Scale(cg::GetWindowWidth() * 0.05f / ogSize.x);
     cg::Vec2f gunSize = gunTex->GetSize();
     cg::Vec2f origin = pos + cg::Vec2f(size,-size) / 3.f;
     gunTex->SetOrigin(origin);
@@ -107,6 +113,13 @@ void GameOver()
     cg::Play(failSfx);
     UpdateSceneChange(SceneDeathScreen, false);
     std::cout << "Game Over!\n";
+}
+
+void ScaleTex(cg::Texture *tex, cg::Vec2f targetSize)
+{
+    cg::Vec2f texSize = tex->GetSize();
+    float scale = std::min(targetSize.x, targetSize.y) / std::max(texSize.x, texSize.y);
+    tex->Scale(scale);
 }
 
 void GenerateCoin()

@@ -50,6 +50,8 @@ inline void AddCoin(cg::Vec2f pos) {
 
 void GameOver();
 
+void ScaleTex(cg::Texture* tex, cg::Vec2f targetSize);
+
 inline cg::Color backgroundTint;
 inline const std::vector<cg::Color> backgroundColors = {
     cg::Color(255, 0, 0),

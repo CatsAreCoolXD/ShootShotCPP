@@ -36,9 +36,10 @@ void StoreItem::Draw(float offset, int index, float &money, cg::Texture *&target
     );
     cg::PopStyle();
 
-    float scale = texSize / std::max(tex->GetSize().x, tex->GetSize().y);
-    tex->Scale(scale);
-    cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - cg::Vec2f(texSize, texSize) / 2.f, tex->GetSize());
+    cg::Vec2f ogSize = tex->GetSize();
+    ScaleTex(tex, cg::Vec2f(texSize,texSize));
+    cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - tex->GetSize() / 2.f, tex->GetSize());
+    tex->SetSize(ogSize);
 
     cg::Vec2f titleTextPos = cg::Vec2f(center.x, texCenterY - texSize / 2.f - spacing / 2.f - nameHeight / 2.f);
     cg::Vec2f descriptionTextPos = titleTextPos - cg::Vec2f(0, nameHeight / 2.f + padding + descriptionSize.y / 2.f);
@@ -82,8 +83,10 @@ void LoadStoreCatalogues(Player& player, float size)
 
         for (int i = 0; i < store->nItems; i++){
             const CosmeticInfo& info = store->cosmeticsInfo[i];
-            cg::Texture* tex = new cg::Texture(info.texPath.c_str());
-            tex->SetSize(cg::Vec2f(size,size));
+            cg::Texture* tex = new cg::Texture(info.texPath.c_str(), WRAPPING_REPEAT, 
+                (store->scalingMethod == TSCLinear) ? MIN_LINEAR : MIN_NEAREST, 
+                (store->scalingMethod == TSCLinear) ? MAG_LINEAR : MAG_NEAREST
+            );
             tex->FlipVertically();
             store->textures.push_back(tex);
 
