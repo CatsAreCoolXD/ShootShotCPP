@@ -26,7 +26,7 @@ void Player::Draw(){
 
     // Draw shotgun rotated towards the mouse. Todo: integrate this into the CGGL library
     ogSize = gunTex->GetSize();
-    gunTex->Scale(cg::GetWindowWidth() * 0.05f / ogSize.x);
+    gunTex->Scale(cg::GetWindowWidth() * 0.05f / std::max(ogSize.x, ogSize.y));
     cg::Vec2f gunSize = gunTex->GetSize();
     cg::Vec2f origin = pos + cg::Vec2f(size,-size) / 3.f;
     gunTex->SetOrigin(origin);
@@ -36,10 +36,10 @@ void Player::Draw(){
 
     // This code is copied from cg::Line()
     cg::Vec2f dir = delta.Normalized();
-    cg::Vec2f right = dir.Right() * gunSize.y;
+    cg::Vec2f right = dir.Right() * gunSize.y / 2.f;
 
     cg::Color color(255,255,255);
-    cg::Vec2f a = origin, b = origin + dir * gunSize.y;
+    cg::Vec2f a = origin, b = origin + dir * gunSize.x;
     cg::Vertex tri1[3] = {
         cg::Vertex(a + right, color, cg::Vec2f(0,0)),
         cg::Vertex(a - right, color, cg::Vec2f(0,1)),
@@ -56,6 +56,7 @@ void Player::Draw(){
     cg::Triangle(tri1, false);
     cg::Triangle(tri2, false);
     cg::StopUsingTexture();
+    gunTex->SetSize(ogSize);
 }
 
 void Player::Update(){
