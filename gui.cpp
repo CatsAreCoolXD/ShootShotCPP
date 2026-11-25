@@ -36,16 +36,20 @@ void StoreItem::Draw(float offset, int index, float &money, cg::Texture *&target
     );
     cg::PopStyle();
 
-    cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - cg::Vec2f(texSize, texSize) / 2.f, cg::Vec2f(texSize, texSize));
+    float scale = texSize / std::max(tex->GetSize().x, tex->GetSize().y);
+    tex->Scale(scale);
+    cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - cg::Vec2f(texSize, texSize) / 2.f, tex->GetSize());
 
     cg::Vec2f titleTextPos = cg::Vec2f(center.x, texCenterY - texSize / 2.f - spacing / 2.f - nameHeight / 2.f);
     cg::Vec2f descriptionTextPos = titleTextPos - cg::Vec2f(0, nameHeight / 2.f + padding + descriptionSize.y / 2.f);
 
+    cg::PushSecondaryColor(rarityColors[rarity] * 0.65f);
     cg::Text(name, titleTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
 
     cg::PushFont(*descriptionFont);
     cg::Text(description, descriptionTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
     cg::PopFont();
+    cg::PopStyle();
 
     cg::Vec2f buyButtonPos = descriptionTextPos - cg::Vec2f(0, descriptionSize.y / 2.f + padding + buttonSize.y / 2.f);
     std::string buttonText = owned ? (targetTex == tex ? "Equipped" : "Equip") : ("Buy for $" + std::to_string(price));
@@ -67,10 +71,10 @@ void StoreItem::Draw(float offset, int index, float &money, cg::Texture *&target
 void LoadStoreCatalogues(Player& player, float size)
 {
     characterStore.targetTexture = &player.GetSpriteTexture();
-    shotgunStore.targetTexture = &player.GetShotgunTexture();
+    gunStore.targetTexture = &player.GetGunTexture();
 
     for (StoreCatalogue* store : storeCatalogues) {
-        // Sort items by price here so I don't have to
+        // Sort items by rarity, then by price
         std::sort(store->cosmeticsInfo.begin(), store->cosmeticsInfo.end(), [](const CosmeticInfo& a, const CosmeticInfo& b){
             if (a.rarity == b.rarity) return a.price < b.price;
             return a.rarity < b.rarity;
@@ -110,10 +114,12 @@ void FreeStoreCatalogues(){
     }
 }
 
-void DrawStore(float &money, Player &player, StoreCatalogue* store, cg::Font* descriptionFont)
+void DrawStore(float &money, StoreCatalogue* store, cg::Font* descriptionFont)
 {
     static float offset = 0;
     offset += cg::GetMouseScroll().y * -50;
+
+    offset = std::clamp(offset, 0.f, store->nItems * cg::GetWindowWidth() * 0.225f);
 
     for (int i = 0; i < store->nItems; i++)
         store->storeItems[i].Draw(offset, i, money, *store->targetTexture, descriptionFont);

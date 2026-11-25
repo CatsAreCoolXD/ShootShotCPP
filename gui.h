@@ -21,7 +21,7 @@ inline const cg::Color rarityColors[6] = {
     cg::Color(163,53,238),
     cg::Color(255,128,0),
     cg::Color(245,66,230),
-    cg::Color(255,234,0)
+    cg::Color(255,234,20)
 };
 
 struct CosmeticInfo {
@@ -97,100 +97,116 @@ inline StoreCatalogue characterStore {
             "Cold Face",
             "Someone turn the AC off!\n\n- Freezing: Time moves slower.",
             "tex/characters/coldface.png",
-            100,
+            99,
             Common
         },
         {
             "Crying Face",
             "Become #1 on the leaderboard to shush them.\n\n- Propelling Tears:\nLaunches tears that decrease your gravity.",
             "tex/characters/cryingface.png",
-            75,
+            69,
             Common
         },
         {
             "Flabbergasted",
             "What are they shocked at?!\n\n- Shocked: Coins are worth +1.",
             "tex/characters/flabbergasted.png",
-            0,
+            199,
             Rare
         },
         {
             "Skull",
             ":skull:\n\n- Undead: Immune to death but coins are nerfed.",
             "tex/characters/skull.png",
-            0,
+            499,
             Epic
         },
         {
             "Verity",
             "Ask him anything! He knows everything.\n\n- Verity: Predicts what's coming next.",
             "tex/characters/verity.png",
-            0,
+            999,
             Legendary
         },
         {
             "Angry Face",
             "Why'd you make them mad??\n\n- Rage: Speeds up time.",
             "tex/characters/angryface.png",
-            0,
+            599,
             Epic
         },
         {
             "Psychopath",
             "Who knows what they're up to...\n\n- Crazy: On RMB, teleport to the nearest coin.",
             "tex/characters/psychopath.png",
-            0,
+            1299,
             Legendary
         },
         {
             "Dinosaur",
             "They look stupid.\n\n- Apex Predator: Coins run away from you,\nbut they are worth more.",
             "tex/characters/dinosaur.png",
-            0,
+            549,
             Epic
         },
         {
             "Laughing Face",
             "They're just here to have fun :)\n\n- Curious: You attract coins, but they're worth less.",
             "tex/characters/laughing.png",
-            0,
+            549,
             Epic
         },
         {
             "Aga",
             "Aga.\n\n- Aga: Aga.",
             "tex/characters/aga.png",
-            0,
-            Legendary
+            1999,
+            Mythical
         }
     }
 };
 
-enum ShotgunIds {
-    SIDDefault,
-    SIDLastItem
+enum GunIds {
+    GIDDefault,
+    GIDAK47,
+    GIDSawedOffShotgun,
+    GIDLastItem
 };
 
-inline StoreCatalogue shotgunStore {
-    SIDLastItem,
+inline StoreCatalogue gunStore {
+    GIDLastItem,
 
     {
         {
             "Rusty Barrel",
             "An old, rusty and boring shotgun.\n\n- No perks.",
-            "tex/shotguns/shotgun.png",
+            "tex/guns/shotgun.png",
             0,
             Common
+        },
+        {
+            "AK-47",
+            "Powerful assault rifle. Shoots very fast.",
+            "tex/guns/AK47.png",
+            49,
+            Common
+        },
+        {
+            "Sawed-Off Shotgun",
+            "A shotgun with it's edge sawed off. Makes for a bigger blast.",
+            "tex/guns/SawedOffShotgun.png",
+            199,
+            Rare
         }
     }
 };
 
-inline std::vector<StoreCatalogue*> storeCatalogues = {&characterStore, &shotgunStore};
+inline std::vector<StoreCatalogue*> storeCatalogues = {&characterStore, &gunStore};
 
 void LoadStoreCatalogues(Player& player, float size);
 void FreeStoreCatalogues();
 
-void DrawStore(float& money, Player& player, StoreCatalogue* store, cg::Font* descriptionFont);
+void DrawStore(float& money, StoreCatalogue* store, cg::Font* descriptionFont);
 
 void DrawLeaderboard(Highscore playerHighscore, cg::Texture* playerTex);
 

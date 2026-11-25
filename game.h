@@ -23,14 +23,14 @@ class Player {
         void Draw();
 
         cg::Texture*& GetSpriteTexture() { return sprite; }
-        cg::Texture*& GetShotgunTexture() { return shotgunTex; }
+        cg::Texture*& GetGunTexture() { return gunTex; }
         void SetSprite(cg::Texture* tex) { sprite = tex; }
-        void SetShotgunTexture(cg::Texture* tex) { shotgunTex = tex; }
+        void SetShotgunTexture(cg::Texture* tex) { gunTex = tex; }
 
         cg::Vec2f pos, velocity = cg::Vec2f(0,0), accel = cg::Vec2f(0,0);
         float size;
     private:
-        cg::Texture* shotgunTex;
+        cg::Texture* gunTex;
         cg::Texture* sprite = nullptr;
 };
 

@@ -102,8 +102,8 @@ int main(){
             player.Draw();
 
             if (scene == SceneStore){
-                static float money = 100; // Todo
-                DrawStore(money, player, targetStoreCatalogue, &smallFont);
+                static float money = 10000; // Todo
+                DrawStore(money, targetStoreCatalogue, &smallFont);
             }
 
             if (scene == SceneMainMenu){
@@ -121,17 +121,16 @@ int main(){
                     UpdateSceneChange(SceneGame, false);
                     player.pos = cg::Vec2f(cg::GetWindowSize() / 2.f); 
                 }
-                buttonPos.y -= size.y + spacing;
 
+                buttonPos.y -= size.y + spacing;
                 if (cg::GUIButton("Character Store", buttonPos, size)) {
                     targetStoreCatalogue = &characterStore;
                     UpdateSceneChange(SceneStore, false);
                 }
 
                 buttonPos.y -= size.y + spacing;
-
                 if (cg::GUIButton("Shotgun Store", buttonPos, size)) {
-                    targetStoreCatalogue = &shotgunStore;
+                    targetStoreCatalogue = &gunStore;
                     UpdateSceneChange(SceneStore, false);
                 }
 

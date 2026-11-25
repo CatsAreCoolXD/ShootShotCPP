@@ -21,19 +21,19 @@ void Player::Draw(){
     cg::Draw(*sprite, sprite->GetOrigin() - cg::Vec2f(cg::GetWindowWidth(), 0.f), sprite->GetSize(), FLAG_NO_BORDER);
 
     // Draw shotgun rotated towards the mouse. Todo: integrate this into the CGGL library
-    cg::Vec2f shotgunSize = shotgunTex->GetSize();
+    cg::Vec2f gunSize = gunTex->GetSize();
     cg::Vec2f origin = pos + cg::Vec2f(size,-size) / 3.f;
-    shotgunTex->SetOrigin(origin);
+    gunTex->SetOrigin(origin);
     
     cg::Vec2f mousePos = cg::GetMousePos();
     cg::Vec2f delta = mousePos - origin;
 
     // This code is copied from cg::Line()
     cg::Vec2f dir = delta.Normalized();
-    cg::Vec2f right = dir.Right() * shotgunSize.y;
+    cg::Vec2f right = dir.Right() * gunSize.y;
 
     cg::Color color(255,255,255);
-    cg::Vec2f a = origin, b = origin + dir * shotgunSize.y;
+    cg::Vec2f a = origin, b = origin + dir * gunSize.y;
     cg::Vertex tri1[3] = {
         cg::Vertex(a + right, color, cg::Vec2f(0,0)),
         cg::Vertex(a - right, color, cg::Vec2f(0,1)),
@@ -46,7 +46,7 @@ void Player::Draw(){
         cg::Vertex(a - right, color, cg::Vec2f(0,1))
     };
 
-    cg::UseTexture(*shotgunTex);
+    cg::UseTexture(*gunTex);
     cg::Triangle(tri1, false);
     cg::Triangle(tri2, false);
     cg::StopUsingTexture();
