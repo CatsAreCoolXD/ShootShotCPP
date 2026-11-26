@@ -29,7 +29,6 @@ void Player::Draw(){
     gunTex->Scale(cg::GetWindowWidth() * 0.05f / std::max(ogSize.x, ogSize.y));
     cg::Vec2f gunSize = gunTex->GetSize();
     cg::Vec2f origin = pos + cg::Vec2f(size,-size) / 3.f;
-    gunTex->SetOrigin(origin);
     
     cg::Vec2f mousePos = cg::GetMousePos();
     cg::Vec2f delta = mousePos - origin;

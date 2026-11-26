@@ -30,6 +30,7 @@ struct CosmeticInfo {
     std::string texPath;
     int price;
     Rarity rarity;
+    float rotationOffset = 0.f;
 };
 
 class StoreItem {
@@ -151,7 +152,7 @@ inline StoreCatalogue characterStore {
         },
         {
             "Dinosaur",
-            "They look stupid.\n\n- Apex Predator: Coins run away from you,\nbut they are worth more.",
+            "They look stupid.\n\n- Apex Predator: Coins run away from you,\nbut they're worth more.",
             "tex/characters/dinosaur.png",
             549,
             Epic
@@ -177,8 +178,18 @@ inline StoreCatalogue characterStore {
 
 enum GunIds {
     GIDDefault,
+    GIDRustyBarrel,
     GIDAK47,
     GIDSawedOffShotgun,
+    GIDRevolver,
+    GIDFlamethrower,
+    GIDGrenadeLauncher,
+    GIDSniperRifle,
+    GIDSniperRifleGreen,
+    GIDBazooka,
+    GIDSubmachineGun,
+    GIDLaserGun,
+    GIDGasterBlaster,
     GIDLastItem
 };
 
@@ -187,25 +198,95 @@ inline StoreCatalogue gunStore {
 
     {
         {
+            "Pistol",
+            "Slow reload time and power. It just sucks.",
+            "tex/guns/1.png",
+            0,
+            Common,
+        },
+        {
             "Rusty Barrel",
             "An old, rusty and boring shotgun.",
             "tex/guns/shotgun.png",
-            0,
+            99,
             Common
         },
         {
             "AK-47",
             "Powerful assault rifle. Shoots very fast.",
             "tex/guns/AK47.png",
-            49,
-            Common
+            299,
+            Rare
         },
         {
             "Sawed-Off\nShotgun",
-            "A shotgun with it's edge sawed off.\nMakes for a bigger blast.",
+            "A shotgun with it's edge sawed off.\n\n- Spread: You get launched higher..",
             "tex/guns/SawedOffShotgun.png",
             199,
             Rare
+        },
+        {
+            "Revolver",
+            "A revolver recovered from the 19th century. It's old.\n\n- Old Age: 1 in 10 chance for the gun not to work.",
+            "tex/guns/Revolver.png",
+            29,
+            Common
+        },
+        {
+            "Flamethrower",
+            "Propels you with fire. Might be a bit unstable.\n\n- Extreme Heat: Coins melt into pure gold because of\nthe flamethrower's flames, making them worth more.",
+            "tex/guns/38.png",
+            1499,
+            Mythical
+        },
+        {
+            "Grenade\nLauncher",
+            "Shoots grenades that launches you when exploding.\n\n- Grenades: Looks cooler, meaning more style points.",
+            "tex/guns/44.png",
+            799,
+            Epic
+        },
+        {
+            "Sniper\nRifle",
+            "Insane power but insane reloading time.\n\n- Higher Power: More power, more style points.",
+            "tex/guns/49.png",
+            699,
+            Epic
+        },
+        {
+            "Green Sniper\nRifle",
+            "Same as sniper rifle but green.\n\n- Higher Power: More power, more style points.",
+            "tex/guns/50.png",
+            749,
+            Epic
+        },
+        {
+            "Bazooka",
+            "Shoots missiles.\n\n- Big Boy: Launches you twice when shooting.\nLong reload time.",
+            "tex/guns/45.png",
+            1099,
+            Legendary
+        },
+        {
+            "Submachine Gun",
+            "Shoots really fast but has low power.",
+            "tex/guns/15.png",
+            399,
+            Rare
+        },
+        {
+            "Laser Gun",
+            "Gravity is a thing of the past.",
+            "tex/guns/Icon29_19.png",
+            2499,
+            Heavenly
+        },
+        {
+            "Gaster Blaster",
+            "Very, very interesting.",
+            "tex/guns/gasterblaster.png",
+            6666,
+            Heavenly
         }
     },
 
