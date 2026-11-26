@@ -103,7 +103,7 @@ int main(){
 
             if (scene == SceneStore){
                 static float money = 10000; // Todo
-                DrawStore(money, targetStoreCatalogue, &smallFont);
+                DrawStore(money, targetStoreCatalogue, player, &smallFont);
             }
 
             if (scene == SceneMainMenu){
@@ -134,7 +134,7 @@ int main(){
                     UpdateSceneChange(SceneStore, false);
                 }
 
-                DrawLeaderboard(playerHighscore, player.GetSpriteTexture());
+                DrawLeaderboard(playerHighscore, player.GetCurrentCharacter()->tex);
             }
 
             // Todo: Make a death screen with stuff like revive, unlock a new character etc

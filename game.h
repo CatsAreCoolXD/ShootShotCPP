@@ -4,6 +4,8 @@
 #include "CGGL/cggl.h"
 #include <vector>
 
+#include "gui.h"
+
 #define COIN_SIZE cg::Vec2f(50,50)
 
 enum GameScene {
@@ -16,22 +18,25 @@ enum GameScene {
 
 inline GameScene scene = GameScene::SceneMainMenu;
 
+CosmeticInfo* FindCosmetic(int id, StoreCatalogue& store);
+
 class Player {
     public:
         Player(cg::Vec2f pos, float size);
         void Update();
         void Draw();
 
-        cg::Texture*& GetSpriteTexture() { return sprite; }
-        cg::Texture*& GetGunTexture() { return gunTex; }
-        void SetSprite(cg::Texture* tex) { sprite = tex; }
-        void SetShotgunTexture(cg::Texture* tex) { gunTex = tex; }
+        void EquipCharacter(CharacterId id);
+        void EquipGun(GunId id);
+
+        CosmeticInfo*& GetCurrentCharacter() { return character; }
+        CosmeticInfo*& GetCurrentGun() { return gun; }
 
         cg::Vec2f pos, velocity = cg::Vec2f(0,0), accel = cg::Vec2f(0,0);
         float size;
     private:
-        cg::Texture* gunTex;
-        cg::Texture* sprite = nullptr;
+        CosmeticInfo* character = nullptr;
+        CosmeticInfo* gun = nullptr;
 };
 
 class Coin {

@@ -1,15 +1,12 @@
 #include "gui.h"
 #include "audio.h"
 
-StoreItem::StoreItem(cg::Texture *tex, const CosmeticInfo &info) : 
-    tex(tex), price(info.price), name(info.name), description(info.description), rarity(info.rarity) {}
-
-void StoreItem::Draw(float offset, int index, float &money, cg::Texture *&targetTex, cg::Font *descriptionFont)
+void DrawStoreItem(CosmeticInfo& cosmetic, float offset, int index, float &money, Player& player, cg::Font *descriptionFont)
 {
     const float spacing = cg::GetWindowWidth() * 0.025f;
     const float padding = spacing / 4.f;
-    const cg::Vec2f descriptionSize = cg::MeasureText(description, descriptionFont);
-    const float nameHeight = cg::MeasureText(name).y;
+    const cg::Vec2f descriptionSize = cg::MeasureText(cosmetic.description, descriptionFont);
+    const float nameHeight = cg::MeasureText(cosmetic.name).y;
     const float containerWidth = cg::GetWindowWidth() / 5.f;
     const float texSize = containerWidth - spacing; // On both sides there will be spacing / 2.f distance to the edge
     const cg::Vec2f buttonSize(texSize, spacing * 2);
@@ -28,7 +25,7 @@ void StoreItem::Draw(float offset, int index, float &money, cg::Texture *&target
     const float containerTop = center.y + containerSize.y / 2.f;
     const float texCenterY = containerTop - spacing / 2.f - texSize / 2.f;
 
-    cg::PushPrimaryColor(rarityColors[rarity]);
+    cg::PushPrimaryColor(rarityColors[cosmetic.rarity]);
     cg::RoundedRectangle(
         cg::Vec2f(center.x, texCenterY),
         cg::Vec2f(texSize, texSize),
@@ -36,6 +33,7 @@ void StoreItem::Draw(float offset, int index, float &money, cg::Texture *&target
     );
     cg::PopStyle();
 
+    cg::Texture* tex = cosmetic.tex;
     cg::Vec2f ogSize = tex->GetSize();
     ScaleTex(tex, cg::Vec2f(texSize,texSize));
     cg::Draw(*tex, cg::Vec2f(center.x, texCenterY) - tex->GetSize() / 2.f, tex->GetSize());
@@ -44,36 +42,35 @@ void StoreItem::Draw(float offset, int index, float &money, cg::Texture *&target
     cg::Vec2f titleTextPos = cg::Vec2f(center.x, texCenterY - texSize / 2.f - spacing / 2.f - nameHeight / 2.f);
     cg::Vec2f descriptionTextPos = titleTextPos - cg::Vec2f(0, nameHeight / 2.f + padding + descriptionSize.y / 2.f);
 
-    cg::PushSecondaryColor(rarityColors[rarity] * 0.65f);
-    cg::Text(name, titleTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
+    cg::PushSecondaryColor(rarityColors[cosmetic.rarity] * 0.65f);
+    cg::Text(cosmetic.name, titleTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
 
     cg::PushFont(*descriptionFont);
-    cg::Text(description, descriptionTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
+    cg::Text(cosmetic.description, descriptionTextPos, FLAG_CENTERED | FLAG_USE_SECONDARY_COLOR);
     cg::PopFont();
     cg::PopStyle();
 
+    CosmeticInfo*& target = (cosmetic.storeId == CharacterStoreId) ? player.GetCurrentCharacter() : player.GetCurrentGun();
+
     cg::Vec2f buyButtonPos = descriptionTextPos - cg::Vec2f(0, descriptionSize.y / 2.f + padding + buttonSize.y / 2.f);
-    std::string buttonText = owned ? (targetTex == tex ? "Equipped" : "Equip") : ("Buy for $" + std::to_string(price));
-    cg::PushPrimaryColor(rarityColors[rarity]);
+    std::string buttonText = cosmetic.owned ? (target->id == cosmetic.id ? "Equipped" : "Equip") : ("Buy for $" + std::to_string(cosmetic.price));
+    cg::PushPrimaryColor(rarityColors[cosmetic.rarity]);
     if (cg::GUIButton(buttonText, buyButtonPos, buttonSize, FLAG_CENTERED)){
-        if (!owned && money >= price){
-            std::cout << "Bought " << name << ".\n";
-            owned = true;
+        if (!cosmetic.owned && money >= cosmetic.price){
+            std::cout << "Bought " << cosmetic.name << ".\n";
+            cosmetic.owned = true;
             cg::Sound* purchaseSound = (rand() % 2) == 0 ? purchase1 : purchase2;
             cg::Play(purchaseSound, 2.f);
 
-            targetTex = tex;
-        } else if (owned)
-            targetTex = tex;
+            target = &cosmetic;
+        } else if (cosmetic.owned)
+            target = &cosmetic;
     }
     cg::PopStyle();
 }
 
 void LoadStoreCatalogues(Player& player, float size)
 {
-    characterStore.targetTexture = &player.GetSpriteTexture();
-    gunStore.targetTexture = &player.GetGunTexture();
-
     for (StoreCatalogue* store : storeCatalogues) {
         // Sort items by rarity, then by price
         std::sort(store->cosmeticsInfo.begin(), store->cosmeticsInfo.end(), [](const CosmeticInfo& a, const CosmeticInfo& b){
@@ -82,22 +79,25 @@ void LoadStoreCatalogues(Player& player, float size)
         });
 
         for (int i = 0; i < store->nItems; i++){
-            const CosmeticInfo& info = store->cosmeticsInfo[i];
-            cg::Texture* tex = new cg::Texture(info.texPath.c_str(), WRAPPING_REPEAT, 
+            CosmeticInfo& cosmetic = store->cosmeticsInfo[i];
+            cg::Texture* tex = new cg::Texture(cosmetic.texPath.c_str(), WRAPPING_REPEAT, 
                 (store->scalingMethod == TSCLinear) ? MIN_LINEAR : MIN_NEAREST, 
                 (store->scalingMethod == TSCLinear) ? MAG_LINEAR : MAG_NEAREST
             );
             tex->FlipVertically();
             store->textures.push_back(tex);
 
-            std::cout << "Loaded texture for store: \"" << info.texPath << "\"\n";
+            cosmetic.storeId = store->storeId;
+            cosmetic.tex = tex;
 
-            StoreItem& item = store->storeItems.emplace_back(tex, info);
+            std::cout << "Loaded texture for store: \"" << cosmetic.texPath << "\"\n";
+
             if (i > 0) continue;
 
             // Equip default item
-            item.owned = true;
-            *store->targetTexture = item.tex;
+            cosmetic.owned = true;
+            if (store->storeId == CharacterStoreId) player.GetCurrentCharacter() = &cosmetic;
+            else if (store->storeId == GunStoreId) player.GetCurrentGun() = &cosmetic;
         }
         
         // Break line
@@ -117,7 +117,7 @@ void FreeStoreCatalogues(){
     }
 }
 
-void DrawStore(float &money, StoreCatalogue* store, cg::Font* descriptionFont)
+void DrawStore(float &money, StoreCatalogue* store, Player& player, cg::Font* descriptionFont)
 {
     static float offset = 0;
     offset += cg::GetMouseScroll().y * -50;
@@ -125,7 +125,7 @@ void DrawStore(float &money, StoreCatalogue* store, cg::Font* descriptionFont)
     offset = std::clamp(offset, 0.f, store->nItems * cg::GetWindowWidth() * 0.225f);
 
     for (int i = 0; i < store->nItems; i++)
-        store->storeItems[i].Draw(offset, i, money, *store->targetTexture, descriptionFont);
+        DrawStoreItem(store->cosmeticsInfo[i], offset, i, money, player, descriptionFont);
 
     const cg::Vec2f backButtonCenter = cg::Vec2f(cg::GetWindowWidth() / 2.f, cg::GetWindowHeight() * 0.9f);
     const cg::Vec2f backButtonSize = cg::Vec2f(cg::GetWindowWidth() / 5.f, cg::GetWindowHeight() * 0.1f);

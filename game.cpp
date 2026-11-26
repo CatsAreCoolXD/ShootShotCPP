@@ -13,6 +13,8 @@ Player::Player(cg::Vec2f pos, float size) : pos(pos), size(size) {
 }
 
 void Player::Draw(){
+    cg::Texture* sprite = character->tex;
+    cg::Texture* gunTex = gun->tex;
     sprite->SetOrigin(pos, FLAG_CENTERED);
 
     // Draw 3 sprites for seamless teleportations from one side of the screen to another
@@ -58,6 +60,18 @@ void Player::Draw(){
     gunTex->SetSize(ogSize);
 }
 
+void Player::EquipCharacter(CharacterId id)
+{
+    CosmeticInfo* info = FindCosmetic(id, characterStore);
+    character = info;
+}
+
+void Player::EquipGun(GunId id)
+{
+    CosmeticInfo* info = FindCosmetic(id, gunStore);
+    gun = info;
+}
+
 void Player::Update(){
     constexpr float mass = 1.f;
     const cg::Vec2f force = cg::Vec2f(0.f, -1500.f);
@@ -69,7 +83,7 @@ void Player::Update(){
     constexpr float maxBoost = 500.f;
     if (scene == SceneGame && cg::GetMouseButtonDown(MOUSE_BUTTON_LEFT) && pos.y < cg::GetWindowHeight()){
         cg::Vec2f delta = pos - cg::Vec2f(cg::GetMousePos());
-        float intensity = std::min(delta.Length(), maxBoost);
+        float intensity = std::min(delta.Length(), maxBoost) * gun->gunPower;
 
         velocity = delta.Normalized() * intensity * 2.5f;
 
@@ -106,6 +120,15 @@ std::vector<cg::Texture*> coinTextures;
 
 int Randint(int min, int max){
     return min + rand() % (max - min);
+}
+
+CosmeticInfo* FindCosmetic(int id, StoreCatalogue& store)
+{
+    for (int i = 0; i < store.cosmeticsInfo.size(); i++){
+        CosmeticInfo* info = &store.cosmeticsInfo[i];
+        if (info->id == id) return info;
+    }
+    return nullptr;
 }
 
 void GameOver()
