@@ -29,6 +29,7 @@ struct CosmeticInfo {
 
     float gunPower = 1.f;
     float gunReloadTime = 0.25f; // Seconds
+    float scale = 0.05f; // Scale for the guns
     float rotationOffset = 0.f;
 
     cg::Texture* tex = nullptr;
@@ -238,7 +239,8 @@ inline StoreCatalogue gunStore {
             299,
             Rare,
             0.75f,
-            0.05f
+            0.05f,
+            0.1f
         },
         {
             GIDSawedOffShotgun,
@@ -268,7 +270,8 @@ inline StoreCatalogue gunStore {
             1499,
             Mythical,
             0.2f,
-            0.f
+            0.f,
+            0.1f
         },
         {
             GIDGrenadeLauncher,
@@ -278,7 +281,8 @@ inline StoreCatalogue gunStore {
             799,
             Epic,
             2.f,
-            2.f
+            2.f,
+            0.2f
         },
         {
             GIDSniperRifle,
@@ -288,7 +292,8 @@ inline StoreCatalogue gunStore {
             699,
             Epic,
             3.f,
-            3.f
+            3.f,
+            0.2f
         },
         {
             GIDSniperRifleGreen,
@@ -298,7 +303,8 @@ inline StoreCatalogue gunStore {
             749,
             Epic,
             3.f,
-            3.f
+            3.f,
+            0.2f
         },
         {
             GIDBazooka,
@@ -308,7 +314,8 @@ inline StoreCatalogue gunStore {
             1099,
             Legendary,
             4.f,
-            4.f
+            4.f,
+            0.25f
         },
         {
             GIDSubmachineGun,
@@ -328,7 +335,9 @@ inline StoreCatalogue gunStore {
             2499,
             Heavenly,
             GUN_VAR_INFINITY,
-            0.f
+            0.f,
+            0.1f,
+            45.f
         },
         {
             GIDGasterBlaster,

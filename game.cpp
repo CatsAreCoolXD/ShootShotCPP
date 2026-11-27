@@ -28,15 +28,22 @@ void Player::Draw(){
 
     // Draw shotgun rotated towards the mouse. Todo: integrate this into the CGGL library
     ogSize = gunTex->GetSize();
-    gunTex->Scale(cg::GetWindowWidth() * 0.05f / std::max(ogSize.x, ogSize.y));
+    gunTex->Scale(cg::GetWindowWidth() * gun->scale / std::max(ogSize.x, ogSize.y));
     cg::Vec2f gunSize = gunTex->GetSize();
     cg::Vec2f origin = pos + cg::Vec2f(size,-size) / 3.f;
     
     cg::Vec2f mousePos = cg::GetMousePos();
     cg::Vec2f delta = mousePos - origin;
 
-    // This code is copied from cg::Line()
     cg::Vec2f dir = delta.Normalized();
+    float angle = gun->rotationOffset * (PI / 180.0f);
+
+    float cosA = std::cos(angle);
+    float sinA = std::sin(angle);
+    dir = cg::Vec2f(
+        dir.x * cosA - dir.y * sinA,
+        dir.x * sinA + dir.y * cosA
+    );
     cg::Vec2f right = dir.Right() * gunSize.y / 2.f;
 
     cg::Color color(255,255,255);
